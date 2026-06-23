@@ -103,7 +103,7 @@ a:active { pointer-events: none !important; }
   font-family: var(--font-dot) !important;
 }
 
-.stApp, .main, .block-container { overflow-x: hidden !important; }
+.stApp, .main { overflow-x: hidden !important; }
 
 section.main .block-container {
   max-width: 100% !important;
@@ -1086,10 +1086,11 @@ img { max-width: 100%; height: auto; }
   border-bottom: 2px solid var(--border-cyan);
   padding: 5px 10px;
   margin-bottom: 8px;
-  box-shadow: 0 2px 0px #003355;
-  gap: 6px;
-  position: relative;
-  z-index: 100;
+  box-shadow: 0 3px 10px #001a2e;
+  gap: 0;
+  position: sticky;
+  top: 0;
+  z-index: 999;
 }
 
 .nav-brand {
@@ -1098,8 +1099,7 @@ img { max-width: 100%; height: auto; }
   color: var(--color-cyan);
   text-shadow: 2px 2px 0px #003355;
   white-space: nowrap;
-  flex-shrink: 0;
-  margin-right: 4px;
+  flex: 1;
 }
 
 /* チェックボックス本体は常に非表示 */
@@ -1107,15 +1107,15 @@ img { max-width: 100%; height: auto; }
   display: none !important;
 }
 
-/* ハンバーガーボタン: デスクトップでは非表示 */
+/* ハンバーガーボタン: 常時表示 */
 .hamburger-btn {
-  display: none;
+  display: block;
   cursor: pointer;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--color-yellow);
   background: var(--bg-card);
   border: 2px solid var(--border-cyan);
-  padding: 3px 10px;
+  padding: 3px 12px;
   margin-left: auto;
   box-shadow: 2px 2px 0px #002244;
   font-family: var(--font-dot);
@@ -1126,70 +1126,56 @@ img { max-width: 100%; height: auto; }
   line-height: 1.4;
 }
 
+/* 展開時: ボタン色をピンクに変更 */
+.nav-toggle-input:checked ~ .hamburger-btn {
+  color: var(--color-pink);
+  border-color: var(--border-pink);
+}
+
+/* リンク群: デフォルト非表示 */
 .nav-links {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  gap: 3px;
+  padding: 6px 0 4px 0;
+}
+
+/* チェック時に縦展開 */
+.nav-toggle-input:checked ~ .nav-links {
   display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  align-items: center;
 }
 
 .nav-link {
   color: var(--text-dim) !important;
   text-decoration: none !important;
-  padding: 4px 10px;
+  padding: 7px 14px;
   border: 2px solid var(--border-dim);
+  border-left: 3px solid var(--border-dim);
   background: var(--bg-card);
   font-family: var(--font-dot);
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   box-shadow: 2px 2px 0px #000;
   white-space: nowrap;
   pointer-events: auto !important;
-  transition: border-color 0.1s, background 0.1s;
-  display: inline-block;
+  transition: border-color 0.1s, background 0.1s, border-left-color 0.1s;
+  display: block;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
 }
 
 .nav-link:hover {
   color: var(--color-cyan) !important;
   border-color: var(--border-cyan) !important;
+  border-left-color: var(--color-cyan) !important;
   background: var(--bg-elevated) !important;
 }
 
 .nav-link.nav-active {
-  color: var(--bg-base) !important;
-  background: var(--color-cyan) !important;
-  border-color: var(--color-cyan) !important;
+  color: var(--color-cyan) !important;
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-dim) !important;
+  border-left: 3px solid var(--color-cyan) !important;
   font-weight: bold;
-  box-shadow: 2px 2px 0px #003355;
-}
-
-/* スマートフォン: ハンバーガー表示 */
-@media (max-width: 768px) {
-  .hamburger-btn {
-    display: block;
-  }
-
-  .nav-links {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    gap: 3px;
-    padding-top: 4px;
-  }
-
-  .nav-link {
-    width: 100%;
-    text-align: left;
-    font-size: 0.82rem;
-    padding: 7px 12px;
-  }
-
-  /* チェック時にリンクを展開 */
-  .nav-toggle-input:checked ~ .nav-links {
-    display: flex;
-  }
-
-  .nav-toggle-input:checked ~ .hamburger-btn {
-    color: var(--color-pink);
-    border-color: var(--border-pink);
-  }
 }
