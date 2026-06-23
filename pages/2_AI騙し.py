@@ -53,14 +53,6 @@ DATA_DIR   = os.path.join(PARENT_DIR, "data")
 ASSETS_DIR = os.path.join(PARENT_DIR, "assets")
 CSS_FILE   = os.path.join(ASSETS_DIR, "style.css")
 
-SAMPLE_IMAGES = {
-    "🐦 とり":  "bird.jpg",
-    "🐈 ねこ":  "cat.jpg",
-    "🚦 標識":  "hyousiki.jpg",
-    "🏢 建物":  "building.jpg",
-    "🏔 山":    "mountain.jpg",
-    "⚽ ボール": "soccerball.jpg",
-}
 
 ATTACK_INFO = {
     "🌪️ ガウスノイズ": {
@@ -253,16 +245,7 @@ st.markdown("""
 # ================================================================
 # SECTION 7: セッション状態の初期化
 # ================================================================
-if "target_img_path" not in st.session_state:
-    for fn in SAMPLE_IMAGES.values():
-        fp = os.path.join(DATA_DIR, fn)
-        if os.path.exists(fp):
-            st.session_state["target_img_path"] = fp
-            break
-
-if "use_upload_2"  not in st.session_state:
-    st.session_state["use_upload_2"] = False
-if "best_score_2"  not in st.session_state:
+if "best_score_2" not in st.session_state:
     st.session_state["best_score_2"] = 0
 
 # ================================================================
@@ -299,51 +282,15 @@ with st.sidebar:
     st.success("🛡️ SHIELD: ONLINE")
 
 # ================================================================
-# SECTION 9: STEP 1 — 作戦対象の画像選択
+# SECTION 9: 画像ロード（固定: 鳥の画像を使用）
 # ================================================================
-st.header("📸 STEP 1：作戦対象を選択せよ")
-
-col_select, col_preview = st.columns([2, 1])
-
-with col_select:
-    tab_sample, tab_upload = st.tabs(["📂 サンプルから選ぶ", "📤 自分の画像を使う"])
-
-    with tab_sample:
-        btn_cols = st.columns(3)
-        for idx, (label, filename) in enumerate(SAMPLE_IMAGES.items()):
-            filepath = os.path.join(DATA_DIR, filename)
-            if btn_cols[idx % 3].button(label, key=f"img_btn_{idx}", use_container_width=True):
-                st.session_state["target_img_path"] = filepath
-                st.session_state["use_upload_2"]    = False
-                st.rerun()
-
-    with tab_upload:
-        uploaded = st.file_uploader(
-            "画像をアップロード", type=["jpg", "png", "jpeg"], key="file_up_2"
-        )
-        if uploaded:
-            st.session_state["uploaded_img_2"] = uploaded
-            st.session_state["use_upload_2"]   = True
-            st.rerun()
-
-# 画像の確定
-if st.session_state["use_upload_2"] and st.session_state.get("uploaded_img_2"):
-    target_image = Image.open(st.session_state["uploaded_img_2"]).convert("RGB")
-elif "target_img_path" in st.session_state and os.path.exists(st.session_state["target_img_path"]):
-    target_image = Image.open(st.session_state["target_img_path"]).convert("RGB")
-else:
-    target_image = None
-
-with col_preview:
-    if target_image:
-        st.image(target_image, caption="選択中の画像", use_container_width=True)
-    else:
-        st.warning("有効な画像が見つかりません")
+bird_path = os.path.join(DATA_DIR, "bird.jpg")
+target_image = Image.open(bird_path).convert("RGB")
 
 # ================================================================
-# SECTION 10: STEP 2 — メインコンテンツ（4タブ構成）
+# SECTION 10: メインコンテンツ（4タブ構成）
 # ================================================================
-st.header("🧪 STEP 2：ミッション開始")
+st.header("🧪 ミッション開始")
 
 tab1, tab2, tab3, tab4 = st.tabs([
     "① AIの弱点を知る",
@@ -481,86 +428,79 @@ with tab1:
     with st.container():
         st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)
 
-        if target_image is None:
-            st.info("⬆️ STEP 1 で画像を選択すると、AIの弱点をインタラクティブに体験できます！")
+        img_arr_weak = np.array(target_image.resize((400, 400)))
+
+        experiment = st.radio(
+            "🔬 試してみる弱点を選択：",
+            ["🌪️ ノイズ耐性", "🔄 回転耐性", "🌗 コントラスト依存"],
+            horizontal=True,
+            key="weakness_exp"
+        )
+
+        test_img = img_arr_weak.copy()
+
+        if "🌪️" in experiment:
+            noise_level = st.slider("ノイズ強度（大きいほど荒くなる）", 0, 128, 20, key="noise_slider_w")
+            if noise_level > 0:
+                noise    = np.random.normal(0, noise_level, img_arr_weak.shape)
+                test_img = np.clip(img_arr_weak.astype(np.float32) + noise, 0, 255).astype(np.uint8)
+            st.caption("💡 高周波ノイズはCNNの特徴抽出を破壊します。")
+
+        elif "🔄" in experiment:
+            angle = st.slider("回転角度（度）", 0, 180, 45, key="rotate_slider_w")
+            if angle > 0:
+                h, w     = img_arr_weak.shape[:2]
+                M        = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1)
+                test_img = cv2.warpAffine(img_arr_weak, M, (w, h))
+            st.caption("💡 多くのCNNは回転不変性を完全には持ちません。")
+
         else:
-            img_arr_weak = np.array(target_image.resize((400, 400)))
+            contrast = st.slider("コントラスト倍率", 0.1, 2.0, 0.3, step=0.05, key="contrast_slider_w")
+            test_img = cv2.convertScaleAbs(img_arr_weak, alpha=contrast, beta=0)
+            st.caption("💡 低コントラストはエッジ情報を弱め、AIを迷わせます。")
 
-            experiment = st.radio(
-                "🔬 試してみる弱点を選択：",
-                ["🌪️ ノイズ耐性", "🔄 回転耐性", "🌗 コントラスト依存"],
-                horizontal=True,
-                key="weakness_exp"
-            )
+        col_orig_w, col_test_w = st.columns(2)
 
-            test_img = img_arr_weak.copy()
-
-            if "🌪️" in experiment:
-                noise_level = st.slider("ノイズ強度（大きいほど荒くなる）", 0, 128, 20, key="noise_slider_w")
-                if noise_level > 0:
-                    noise    = np.random.normal(0, noise_level, img_arr_weak.shape)
-                    test_img = np.clip(img_arr_weak.astype(np.float32) + noise, 0, 255).astype(np.uint8)
-                st.caption("💡 高周波ノイズはCNNの特徴抽出を破壊します。")
-
-            elif "🔄" in experiment:
-                angle = st.slider("回転角度（度）", 0, 180, 45, key="rotate_slider_w")
-                if angle > 0:
-                    h, w     = img_arr_weak.shape[:2]
-                    M        = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1)
-                    test_img = cv2.warpAffine(img_arr_weak, M, (w, h))
-                st.caption("💡 多くのCNNは回転不変性を完全には持ちません。")
-
-            else:
-                contrast = st.slider("コントラスト倍率", 0.1, 2.0, 0.3, step=0.05, key="contrast_slider_w")
-                test_img = cv2.convertScaleAbs(img_arr_weak, alpha=contrast, beta=0)
-                st.caption("💡 低コントラストはエッジ情報を弱め、AIを迷わせます。")
-
-            col_orig_w, col_test_w = st.columns(2)
-
-            with col_orig_w:
-                st.markdown("""
-                <div class="img-frame">
-                    <span class="step-badge">ORIGINAL</span>
-                    <div class="caption-text">元の画像</div>
-                </div>""", unsafe_allow_html=True)
-                st.image(img_arr_weak, use_container_width=True)
-                if TORCH_AVAILABLE:
-                    orig_lbl_w, orig_pct_w = predict_image(img_arr_weak)[:2]
-                    st.metric("AIの判定", orig_lbl_w[:24] if len(orig_lbl_w) <= 24 else orig_lbl_w[:21] + "…")
-                    st.metric("確信度",   f"{orig_pct_w:.1f}%")
-
-            with col_test_w:
-                st.markdown("""
-                <div class="img-frame frame-phase2">
-                    <span class="step-badge">MODIFIED</span>
-                    <div class="caption-text">変化後の画像</div>
-                </div>""", unsafe_allow_html=True)
-                st.image(test_img, use_container_width=True)
-                if TORCH_AVAILABLE:
-                    test_lbl_w, test_pct_w = predict_image(test_img)[:2]
-                    delta_w = test_pct_w - orig_pct_w
-                    st.metric("AIの判定", test_lbl_w[:24] if len(test_lbl_w) <= 24 else test_lbl_w[:21] + "…")
-                    st.metric("確信度",   f"{test_pct_w:.1f}%", f"{delta_w:+.1f}%")
-
+        with col_orig_w:
+            st.markdown("""
+            <div class="img-frame">
+                <span class="step-badge">ORIGINAL</span>
+                <div class="caption-text">元の画像</div>
+            </div>""", unsafe_allow_html=True)
+            st.image(img_arr_weak, use_container_width=True)
             if TORCH_AVAILABLE:
-                if orig_lbl_w != test_lbl_w:
-                    st.error(f"⚠️ AIが「{orig_lbl_w}」→「{test_lbl_w}」へ誤認識しました！")
-                elif abs(orig_pct_w - test_pct_w) > 10:
-                    st.warning(f"⚠️ AIの確信度が{abs(orig_pct_w - test_pct_w):.1f}%も変化しました！")
-                else:
-                    st.success("✅ AIはまだ正確に認識しています。スライダーを動かして攻撃を強めてみよう！")
+                orig_lbl_w, orig_pct_w = predict_image(img_arr_weak)[:2]
+                st.metric("AIの判定", orig_lbl_w[:24] if len(orig_lbl_w) <= 24 else orig_lbl_w[:21] + "…")
+                st.metric("確信度",   f"{orig_pct_w:.1f}%")
+
+        with col_test_w:
+            st.markdown("""
+            <div class="img-frame frame-phase2">
+                <span class="step-badge">MODIFIED</span>
+                <div class="caption-text">変化後の画像</div>
+            </div>""", unsafe_allow_html=True)
+            st.image(test_img, use_container_width=True)
+            if TORCH_AVAILABLE:
+                test_lbl_w, test_pct_w = predict_image(test_img)[:2]
+                delta_w = test_pct_w - orig_pct_w
+                st.metric("AIの判定", test_lbl_w[:24] if len(test_lbl_w) <= 24 else test_lbl_w[:21] + "…")
+                st.metric("確信度",   f"{test_pct_w:.1f}%", f"{delta_w:+.1f}%")
+
+        if TORCH_AVAILABLE:
+            if orig_lbl_w != test_lbl_w:
+                st.error(f"⚠️ AIが「{orig_lbl_w}」→「{test_lbl_w}」へ誤認識しました！")
+            elif abs(orig_pct_w - test_pct_w) > 10:
+                st.warning(f"⚠️ AIの確信度が{abs(orig_pct_w - test_pct_w):.1f}%も変化しました！")
             else:
-                st.info("💡 ② 騙しシミュレーター タブでAIへの実際の影響を体験できます！")
+                st.success("✅ AIはまだ正確に認識しています。スライダーを動かして攻撃を強めてみよう！")
+        else:
+            st.info("💡 ② 騙しシミュレーター タブでAIへの実際の影響を体験できます！")
 
 # ---------------------------------------------------------------
 # TAB 2: 騙しシミュレーター
 # ---------------------------------------------------------------
 with tab2:
     st.header("🎮 AI騙しチャレンジ！")
-
-    if target_image is None:
-        st.error("先に STEP 1 で画像を選択してください！")
-        st.stop()
 
     img_array = np.array(target_image.resize((400, 400)))
 

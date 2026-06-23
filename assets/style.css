@@ -622,7 +622,7 @@ div[data-testid="stMetric"] {
   background: var(--bg-card) !important;
   border: 2px solid var(--border-cyan) !important;
   border-radius: 0 !important;
-  padding: 8px 12px !important;
+  padding: 5px 8px !important;
   text-align: center !important;
   box-shadow: var(--shadow-cyan) !important;
 }
@@ -632,16 +632,16 @@ div[data-testid="stMetricLabel"] {
   justify-content: center !important;
   font-weight: bold !important;
   color: var(--text-dim) !important;
-  font-size: 0.78rem !important;
+  font-size: 0.68rem !important;
 }
 
 div[data-testid="stMetricLabel"] p {
-  font-size: 0.78rem !important;
+  font-size: 0.68rem !important;
 }
 
 div[data-testid="stMetricValue"] {
   font-family: var(--font-mono) !important;
-  font-size: clamp(1rem, 2vw, 1.4rem) !important;
+  font-size: clamp(0.82rem, 1.5vw, 1.0rem) !important;
   color: var(--color-cyan) !important;
   display: flex !important;
   justify-content: center !important;
@@ -869,12 +869,13 @@ div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anc
   height: auto !important;
 }
 
-/* コンテンツ写真（サンプル画像など）: 小さめ・比率保持
+/* コンテンツ写真（サンプル画像など）: 小さめ・比率保持・中央寄せ
    コンテナを fit-content にして強制的な幅伸縮を防ぐ */
 div[data-testid="stImage"] {
   display: block !important;
   width: fit-content !important;
   max-width: 100% !important;
+  margin: 0 auto !important;
 }
 div[data-testid="stImage"] img {
   max-height: 200px !important;
@@ -884,12 +885,15 @@ div[data-testid="stImage"] img {
 }
 
 /* シミュレーション/matplotlib グラフ: 幅いっぱいに表示・大きめ
-   .sim-chart-marker スパンの直後にある stImage を対象 */
+   Streamlit は各要素を .element-container でラップするため、
+   .sim-chart-marker → 次の .element-container 内の stImage を対象 */
+.element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"],
 [data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"],
 [data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"],
 div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] {
   width: 100% !important;
 }
+.element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"] img,
 [data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
 [data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"] img,
 div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] img {
@@ -905,6 +909,7 @@ img { max-width: 100%; height: auto; }
   div[data-testid="stImage"] img {
     max-height: 160px !important;
   }
+  .element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"] img,
   [data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
   [data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"] img,
   div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] img {

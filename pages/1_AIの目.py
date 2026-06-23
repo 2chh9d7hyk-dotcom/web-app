@@ -54,14 +54,6 @@ DATA_DIR   = os.path.join(PARENT_DIR, "data")
 ASSETS_DIR = os.path.join(PARENT_DIR, "assets")
 CSS_FILE   = os.path.join(ASSETS_DIR, "style.css")
 
-SAMPLE_IMAGES = {
-    "🐦 とり":  "bird.jpg",
-    "🐈 ねこ":  "cat.jpg",
-    "🚦 標識":  "hyousiki.jpg",
-    "🏢 建物":  "building.jpg",
-    "🏔 山":    "mountain.jpg",
-    "⚽ ボール": "soccerball.jpg",
-}
 
 # ================================================================
 # SECTION 3: ユーティリティ関数
@@ -136,18 +128,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ================================================================
-# SECTION 6: セッション状態の初期化
-# ================================================================
-if "img_path" not in st.session_state:
-    for fn in SAMPLE_IMAGES.values():
-        fp = os.path.join(DATA_DIR, fn)
-        if os.path.exists(fp):
-            st.session_state["img_path"] = fp
-            break
-
-if "use_upload" not in st.session_state:
-    st.session_state["use_upload"] = False
 
 # ================================================================
 # SECTION 7: サイドバー
@@ -172,47 +152,15 @@ with st.sidebar:
     st.success("🛡️ SHIELD: ONLINE")
 
 # ================================================================
-# SECTION 8: STEP 1 — 画像選択
+# SECTION 8: 画像ロード（固定: 鳥の画像を使用）
 # ================================================================
-st.header("📸 STEP 1：AIに見せる画像を選ぼう！")
-
-col_select, col_preview = st.columns([2, 1])
-
-with col_select:
-    tab_sample_ui, tab_upload_ui = st.tabs(["📂 サンプルから選ぶ", "📤 自分の画像を使う"])
-
-    with tab_sample_ui:
-        btn_cols = st.columns(3)
-        for idx, (label, filename) in enumerate(SAMPLE_IMAGES.items()):
-            filepath = os.path.join(DATA_DIR, filename)
-            if btn_cols[idx % 3].button(label, key=f"img_btn_{idx}", use_container_width=True):
-                st.session_state["img_path"]   = filepath
-                st.session_state["use_upload"] = False
-                st.rerun()
-
-    with tab_upload_ui:
-        uploaded_file = st.file_uploader("画像をアップロード", type=["jpg", "png", "jpeg"], key="main_up")
-        if uploaded_file:
-            st.session_state["uploaded_file"] = uploaded_file
-            st.session_state["use_upload"]    = True
-            st.rerun()
-
-# 画像の確定
-if st.session_state["use_upload"] and st.session_state.get("uploaded_file"):
-    image = Image.open(st.session_state.get("uploaded_file")).convert("RGB")
-elif "img_path" in st.session_state and os.path.exists(st.session_state["img_path"]):
-    image = Image.open(st.session_state["img_path"]).convert("RGB")
-else:
-    image = create_dummy_image("No Image", (100, 100, 100))
-
-with col_preview:
-    st.image(image, caption="選択中の画像", width=220)
-    st.caption(f"サイズ: {image.width}×{image.height}px")
+bird_path = os.path.join(DATA_DIR, "bird.jpg")
+image = Image.open(bird_path).convert("RGB")
 
 # ================================================================
 # SECTION 9: STEP 2 — タブコンテンツ
 # ================================================================
-st.header("🔬 STEP 2：タブを選んでAIの見ている世界を体験しよう！")
+st.header("🔬 タブを選んでAIの見ている世界を体験しよう！")
 
 tab1, tab2, tab3 = st.tabs([
     "① 数字の世界 (RGB)",
@@ -269,7 +217,7 @@ with tab1:
 
         st.divider()
 
-    st.header("STEP 3：AIに見えているデータを覗いてみよう！")
+    st.header("🔍 AIに見えているデータを覗いてみよう！")
 
     with st.container():
         st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)
