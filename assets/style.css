@@ -622,7 +622,7 @@ div[data-testid="stMetric"] {
   background: var(--bg-card) !important;
   border: 2px solid var(--border-cyan) !important;
   border-radius: 0 !important;
-  padding: 15px !important;
+  padding: 8px 12px !important;
   text-align: center !important;
   box-shadow: var(--shadow-cyan) !important;
 }
@@ -632,11 +632,16 @@ div[data-testid="stMetricLabel"] {
   justify-content: center !important;
   font-weight: bold !important;
   color: var(--text-dim) !important;
+  font-size: 0.78rem !important;
+}
+
+div[data-testid="stMetricLabel"] p {
+  font-size: 0.78rem !important;
 }
 
 div[data-testid="stMetricValue"] {
   font-family: var(--font-mono) !important;
-  font-size: clamp(1.4rem, 2.8vw, 2rem) !important;
+  font-size: clamp(1rem, 2vw, 1.4rem) !important;
   color: var(--color-cyan) !important;
   display: flex !important;
   justify-content: center !important;
@@ -867,7 +872,7 @@ div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anc
 
 [data-testid="stImage"] img {
   max-width: 100% !important;
-  max-height: 260px !important;
+  max-height: 400px !important;
   height: auto !important;
   object-fit: contain !important;
 }
@@ -876,7 +881,7 @@ img { max-width: 100%; height: auto; }
 
 @media (max-width: 768px) {
   [data-testid="stImage"] img {
-    max-height: 200px !important;
+    max-height: 300px !important;
   }
 }
 
@@ -1163,6 +1168,13 @@ img { max-width: 100%; height: auto; }
   width: 100%;
   text-align: left;
   box-sizing: border-box;
+}
+
+/* a:active { pointer-events: none } を上書き（特異度 0,2,1 > 0,1,1） */
+a.nav-link,
+a.nav-link:active,
+a.nav-link:focus {
+  pointer-events: auto !important;
 }
 
 .nav-link:hover {
