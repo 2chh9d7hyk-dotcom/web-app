@@ -9,15 +9,15 @@
    0. CSS CUSTOM PROPERTIES (変数定義)
    ============================================================ */
 :root {
-  /* --- 背景レイヤー --- */
-  --bg-base:     #06090f;  /* 最深背景 */
-  --bg-surface:  #0c1220;  /* 画面背景 */
-  --bg-card:     #131c32;  /* カード */
-  --bg-elevated: #1c2a45;  /* 強調カード */
+  /* --- 背景レイヤー (視認性向上: 濃紺→ミッドナイトブルー) --- */
+  --bg-base:     #0d1117;  /* 最深背景 */
+  --bg-surface:  #161b27;  /* 画面背景 */
+  --bg-card:     #1e2a3a;  /* カード */
+  --bg-elevated: #263548;  /* 強調カード */
 
   /* --- ボーダー --- */
-  --border-dim:    #1e3158;
-  --border-main:   #2a4a8a;
+  --border-dim:    #2d3f5a;
+  --border-main:   #3d5a8a;
   --border-cyan:   #00d4ff;
   --border-pink:   #ff71ce;
   --border-green:  #05ffa1;
@@ -31,9 +31,9 @@
   --color-purple: #b57bff;  /* 紫 */
   --color-orange: #ff9f43;  /* オレンジ */
 
-  /* --- テキスト --- */
-  --text-main:  #c8d8f0;   /* メインテキスト */
-  --text-dim:   #5a6e8a;   /* 薄いテキスト */
+  /* --- テキスト (コントラスト向上) --- */
+  --text-main:  #e6edf3;   /* メインテキスト (明るいオフホワイト) */
+  --text-dim:   #8b9ab0;   /* 薄いテキスト (読みやすいグレー) */
   --text-bright:#ffffff;   /* 白 */
 
   /* --- ピクセルシャドウ (blur=0) --- */

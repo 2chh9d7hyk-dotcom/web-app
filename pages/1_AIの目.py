@@ -6,12 +6,12 @@ from PIL import Image
 import os
 import matplotlib.pyplot as plt
 try:
-    import tensorflow as tf
-    from tensorflow.keras.applications import MobileNetV2
-    from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
-    TF_AVAILABLE = True
+    import torch
+    import torchvision.models as tv_models
+    from torchvision.models import MobileNet_V2_Weights
+    TORCH_AVAILABLE = True
 except ImportError:
-    TF_AVAILABLE = False
+    TORCH_AVAILABLE = False
 import base64
 import hashlib
 # --- セキュリティバイデザイン：アクセス制御と保護 ---
@@ -56,13 +56,16 @@ def get_image_as_base64(path):
     with open(path, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
-if TF_AVAILABLE:
+if TORCH_AVAILABLE:
     @st.cache_resource
     def load_model():
-        return MobileNetV2(weights="imagenet")
-    model = load_model()
+        weights = MobileNet_V2_Weights.IMAGENET1K_V1
+        m = tv_models.mobilenet_v2(weights=weights)
+        m.eval()
+        return m, weights.meta["categories"], weights.transforms()
+    _model, _categories, _preprocess = load_model()
 else:
-    model = None
+    _model, _categories, _preprocess = None, [], None
 
 def judge_with_confidence(score):
     if score > 85:
@@ -75,15 +78,15 @@ def judge_with_confidence(score):
         return "分かりません。", "error"
 
 def predict_image(img_array):
-    if not TF_AVAILABLE or model is None:
-        return "AI機能は現在利用できません（TensorFlow未インストール）", 0.0
-    img_resized = cv2.resize(img_array, (224,224))
-    img_pre = preprocess_input(np.expand_dims(img_resized.astype(np.float32), axis=0))
-    preds = model.predict(img_pre, verbose=0)
-    decoded = decode_predictions(preds, top=1)[0][0]
-    label = decoded[1]
-    confidence = float(decoded[2]) * 100
-    return label, confidence
+    if not TORCH_AVAILABLE or _model is None:
+        return "AI機能は現在利用できません", 0.0
+    img_pil = Image.fromarray(cv2.cvtColor(img_array, cv2.COLOR_BGR2RGB))
+    input_tensor = _preprocess(img_pil).unsqueeze(0)
+    with torch.no_grad():
+        output = _model(input_tensor)
+    probs = torch.nn.functional.softmax(output[0], dim=0)
+    top_prob, top_idx = torch.max(probs, 0)
+    return _categories[top_idx.item()], top_prob.item() * 100
 
 def local_css(file_name):
     if os.path.exists(file_name):
@@ -950,13 +953,16 @@ if image:
             # ==============================
             # AI推論
             # ==============================
-            if not TF_AVAILABLE or model is None:
-                st.warning("TensorFlowが利用できないため、AI推論機能は無効です。")
+            if not TORCH_AVAILABLE or _model is None:
+                st.warning("PyTorchが利用できないため、AI推論機能は無効です。")
                 st.stop()
-            img_resized = cv2.resize(test_img, (224,224))
-            img_pre = preprocess_input(np.expand_dims(img_resized.astype(np.float32), axis=0))
-            preds = model.predict(img_pre, verbose=0)
-            decoded = decode_predictions(preds, top=5)[0]
+            img_pil_test = Image.fromarray(cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB))
+            input_tensor = _preprocess(img_pil_test).unsqueeze(0)
+            with torch.no_grad():
+                output = _model(input_tensor)
+            probs = torch.nn.functional.softmax(output[0], dim=0)
+            top5_probs, top5_idx = torch.topk(probs, 5)
+            decoded = [(f"n{top5_idx[i].item():08d}", _categories[top5_idx[i].item()], top5_probs[i].item()) for i in range(5)]
 
             current_top_label = decoded[0][1]
 
