@@ -153,6 +153,7 @@ with st.sidebar:
     st.page_link("main_app.py",          label="司令室 (Home)",        icon="🏠")
     st.page_link("pages/1_AIの目.py",    label="ミッション01: AIの目", icon="👁️")
     st.page_link("pages/2_AI騙し.py",   label="ミッション02: AI騙し", icon="🎭")
+    st.page_link("pages/3_AI育成.py",   label="ミッション03: AI育成", icon="🧬")
     st.divider()
     st.success("🛡️ SHIELD: ONLINE")
 

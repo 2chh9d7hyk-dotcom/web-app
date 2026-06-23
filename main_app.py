@@ -79,6 +79,7 @@ with st.sidebar:
     st.page_link("main_app.py", label="司令室 (Home)", icon="🏠")
     st.page_link("pages/1_AIの目.py",  label="ミッション01: AIの目",  icon="👁️")
     st.page_link("pages/2_AI騙し.py", label="ミッション02: AI騙し", icon="🎭")
+    st.page_link("pages/3_AI育成.py", label="ミッション03: AI育成", icon="🧬")
     st.success("🛡️ SHIELD: ONLINE")
     # システム時刻の秒まで動的に表示（再読み込みのたびに更新）
     st.caption(f"Last Ping: {datetime.now().strftime('%H:%M:%S')}")
@@ -153,21 +154,21 @@ with c2:
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-# --- ミッション3：ロック中 ---
+# --- ミッション3：解放済み ---
 with c3:
     st.markdown("""
-    <div class="feature-card locked-card">
-        <h3>🧠 ミッション03: 育成</h3>
-        <p>AIの脳ネットワークを構築する。学習プロセスを可視化せよ。（現在ロック中）</p>
+    <div class="feature-card">
+        <h3>🧬 ミッション03: AI育成</h3>
+        <p>ニューロンを育て、ネットワークを組む。学習・過学習・勾配降下法をインタラクティブに体験せよ。</p>
         <div class="math-badge">Loss ↓ Accuracy ↑</div>
     </div>
     """, unsafe_allow_html=True)
     with st.container():
         st.markdown('<div class="invisible-button">', unsafe_allow_html=True)
-        if st.button("🔒 アクセス権限不足", disabled=True, use_container_width=True, key="lock2"):
+        if st.button("🧬 AI育成を体験するにはここをクリック！", use_container_width=True, key="btn_mission_3"):
             st.switch_page("pages/3_AI育成.py")
         st.markdown('</div>', unsafe_allow_html=True)
-        
+
     st.markdown('</div>', unsafe_allow_html=True)
 # =====================================
 # 7. 今日のInsight（ハッカー風デザイン）
