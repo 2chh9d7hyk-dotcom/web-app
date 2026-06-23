@@ -863,27 +863,38 @@ div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anc
 /* ============================================================
    16. IMAGES — 画像
    ============================================================ */
-[data-testid="stImage"],
 .img-frame img,
 .html-zoom-img {
   max-width: 100% !important;
   height: auto !important;
 }
 
-/* コンテンツ写真（サンプル画像など）: 小さめ */
-[data-testid="stImage"] img {
+/* コンテンツ写真（サンプル画像など）: 小さめ・比率保持
+   コンテナを fit-content にして強制的な幅伸縮を防ぐ */
+div[data-testid="stImage"] {
+  display: block !important;
+  width: fit-content !important;
   max-width: 100% !important;
+}
+div[data-testid="stImage"] img {
   max-height: 200px !important;
+  max-width: 100% !important;
   width: auto !important;
   height: auto !important;
 }
 
-/* シミュレーション/matplotlib グラフ: 大きめ
+/* シミュレーション/matplotlib グラフ: 幅いっぱいに表示・大きめ
    .sim-chart-marker スパンの直後にある stImage を対象 */
+[data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"],
+[data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"],
+div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] {
+  width: 100% !important;
+}
 [data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
 [data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"] img,
 div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] img {
   max-height: 430px !important;
+  max-width: 100% !important;
   width: auto !important;
   height: auto !important;
 }
@@ -891,7 +902,7 @@ div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-tes
 img { max-width: 100%; height: auto; }
 
 @media (max-width: 768px) {
-  [data-testid="stImage"] img {
+  div[data-testid="stImage"] img {
     max-height: 160px !important;
   }
   [data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
