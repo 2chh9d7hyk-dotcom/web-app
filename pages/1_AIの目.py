@@ -5,9 +5,13 @@ import pandas as pd
 from PIL import Image
 import os
 import matplotlib.pyplot as plt
-import tensorflow as tf
-from tensorflow.keras.applications import MobileNetV2
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
+try:
+    import tensorflow as tf
+    from tensorflow.keras.applications import MobileNetV2
+    from tensorflow.keras.applications.mobilenet_v2 import preprocess_input, decode_predictions
+    TF_AVAILABLE = True
+except ImportError:
+    TF_AVAILABLE = False
 import base64
 import hashlib
 # --- セキュリティバイデザイン：アクセス制御と保護 ---
@@ -52,11 +56,13 @@ def get_image_as_base64(path):
     with open(path, "rb") as f:
         data = f.read()
     return base64.b64encode(data).decode()
-@st.cache_resource
-def load_model():
-    return MobileNetV2(weights="imagenet")
-
-model = load_model()
+if TF_AVAILABLE:
+    @st.cache_resource
+    def load_model():
+        return MobileNetV2(weights="imagenet")
+    model = load_model()
+else:
+    model = None
 
 def judge_with_confidence(score):
     if score > 85:
@@ -69,6 +75,8 @@ def judge_with_confidence(score):
         return "分かりません。", "error"
 
 def predict_image(img_array):
+    if not TF_AVAILABLE or model is None:
+        return "AI機能は現在利用できません（TensorFlow未インストール）", 0.0
     img_resized = cv2.resize(img_array, (224,224))
     img_pre = preprocess_input(np.expand_dims(img_resized.astype(np.float32), axis=0))
     preds = model.predict(img_pre, verbose=0)
@@ -942,6 +950,9 @@ if image:
             # ==============================
             # AI推論
             # ==============================
+            if not TF_AVAILABLE or model is None:
+                st.warning("TensorFlowが利用できないため、AI推論機能は無効です。")
+                st.stop()
             img_resized = cv2.resize(test_img, (224,224))
             img_pre = preprocess_input(np.expand_dims(img_resized.astype(np.float32), axis=0))
             preds = model.predict(img_pre, verbose=0)

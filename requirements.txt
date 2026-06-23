@@ -4,4 +4,3 @@ numpy
 pandas
 Pillow
 matplotlib
-tensorflow-cpu==2.15.1
