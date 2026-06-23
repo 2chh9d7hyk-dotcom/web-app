@@ -1,1089 +1,1036 @@
 /* ============================================================
-   1. GLOBAL SECURITY & INTERFACE PROTECTION
+   AI INQUIRY LAB — PIXEL ART THEME (ドット絵スタイル)
    ============================================================ */
-/* アプリ全体のコピー制限と情報漏洩ルートの遮断 */
-.stApp {
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    overflow-x: hidden !important;
-    /* 全体的な横スクロールを防止 */
-}
 
-/* 画像・キャンバスの右クリック保存・ドラッグ・調査を心理的に抑制 */
-canvas,
-img,
-[data-testid="stImage"] {
-    pointer-events: none !important;
-    user-select: none !important;
-    max-width: 100%;
-    height: auto !important;
-}
+/* --- Google Fonts: ピクセルフォント読み込み --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap');
 
-/* Streamlit標準メニュー・ヘッダー・フッターを完全非表示 */
-#MainMenu,
-header,
-footer,
-[data-testid="stHeader"] {
-    visibility: hidden !important;
-    height: 0 !important;
-    padding: 0 !important;
-}
+/* ============================================================
+   0. CSS CUSTOM PROPERTIES (変数定義)
+   ============================================================ */
+:root {
+  /* --- 背景レイヤー --- */
+  --bg-base:     #06090f;  /* 最深背景 */
+  --bg-surface:  #0c1220;  /* 画面背景 */
+  --bg-card:     #131c32;  /* カード */
+  --bg-elevated: #1c2a45;  /* 強調カード */
 
-/* リンクの不用意な操作を抑制 */
-a:active {
-    pointer-events: none !important;
+  /* --- ボーダー --- */
+  --border-dim:    #1e3158;
+  --border-main:   #2a4a8a;
+  --border-cyan:   #00d4ff;
+  --border-pink:   #ff71ce;
+  --border-green:  #05ffa1;
+
+  /* --- アクセントカラー --- */
+  --color-cyan:   #00d4ff;  /* プライマリ (LCD ブルー) */
+  --color-pink:   #ff71ce;  /* セカンダリ (ネオンピンク) */
+  --color-green:  #05ffa1;  /* 成功 (マトリックス緑) */
+  --color-yellow: #ffd700;  /* 警告 (ゴールド) */
+  --color-red:    #ff4555;  /* エラー */
+  --color-purple: #b57bff;  /* 紫 */
+  --color-orange: #ff9f43;  /* オレンジ */
+
+  /* --- テキスト --- */
+  --text-main:  #c8d8f0;   /* メインテキスト */
+  --text-dim:   #5a6e8a;   /* 薄いテキスト */
+  --text-bright:#ffffff;   /* 白 */
+
+  /* --- ピクセルシャドウ (blur=0) --- */
+  --shadow-sm:   3px 3px 0px #000000;
+  --shadow-md:   4px 4px 0px #000000;
+  --shadow-cyan: 4px 4px 0px #003366;
+  --shadow-pink: 4px 4px 0px #550033;
+  --shadow-green:4px 4px 0px #003322;
+
+  /* --- フォント --- */
+  --font-pixel: 'Press Start 2P', 'DotGothic16', 'Courier New', monospace;
+  --font-dot:   'DotGothic16', 'Press Start 2P', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+  --font-mono:  'Courier New', 'Lucida Console', monospace;
 }
 
 /* ============================================================
-   2. SYSTEM THEME & ANIMATION
+   1. SECURITY & PROTECTION
    ============================================================ */
-/* 動的な背景グラデーションと基本フォント設定 */
 .stApp {
-    background: linear-gradient(-45deg, #f8fafc, #e2e8f0, #e0f2fe, #f1f5f9) !important;
-    background-size: 400% 400% !important;
-    animation: gradientBG 15s ease infinite !important;
-    color: #1e293b !important;
-    font-family: 'Inter', 'Segoe UI', sans-serif !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  overflow-x: hidden !important;
 }
 
-@keyframes gradientBG {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
+canvas, img, [data-testid="stImage"] {
+  pointer-events: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  max-width: 100%;
+  height: auto !important;
 }
 
-/* ============================================================
-   3. DATA MASKING (SECURE LAYER)
-   ============================================================ */
-/* ハッシュ値などの難読化：ホバー時のみ表示 */
-.secure-text {
-    filter: blur(5px);
-    transition: filter 0.3s ease;
-    cursor: help;
-    background-color: #f8fafc;
-    padding: 2px 6px;
-    border-radius: 4px;
+#MainMenu, header, footer, [data-testid="stHeader"] {
+  visibility: hidden !important;
+  height: 0 !important;
+  padding: 0 !important;
 }
 
-.secure-text:hover {
-    filter: blur(0);
-}
+a:active { pointer-events: none !important; }
 
 .no-copy {
-    user-select: none !important;
-    pointer-events: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  pointer-events: none !important;
 }
+
+.secure-text {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+  cursor: help;
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border: 1px solid var(--border-dim);
+}
+.secure-text:hover { filter: blur(0); }
 
 /* ============================================================
-   4. UI COMPONENTS (MODERN DESIGN)
-   ============================================================ */
-/* ヒーローセクション */
-.hero-title {
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 900;
-    letter-spacing: -0.05em;
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.1;
-}
-
-.hero-sub {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    color: #475569;
-    border-left: 4px solid #3b82f6;
-    padding-left: 15px;
-    margin-bottom: 1.5rem;
-}
-
-/* グラスモーフィズム・カード */
-.feature-card {
-    background: rgba(255, 255, 255, 0.7) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-    border-radius: 20px !important;
-    padding: 30px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-}
-
-.feature-card:hover {
-    transform: translateY(-8px) !important;
-    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15) !important;
-}
-
-/* インサイト・ターミナル */
-.insight-card {
-    background: #0f172a !important;
-    color: #e2e8f0 !important;
-    border-left: 5px solid #10b981 !important;
-    padding: 20px !important;
-    border-radius: 12px !important;
-    font-family: monospace !important;
-}
-
-/* サイバー・バッジ */
-.math-badge {
-    font-family: 'Courier New', monospace !important;
-    background: #1e293b !important;
-    color: #38bdf8 !important;
-    padding: 6px 12px !important;
-    border-radius: 8px !important;
-    font-size: 0.85rem !important;
-}
-
-/* ============================================================
-   5. RESPONSIVE DESIGN (MOBILE OPTIMIZATION)
-   ============================================================ */
-@media (max-width: 768px) {
-
-    /* 横スクロールの完全封鎖 */
-    .main .block-container {
-        max-width: 100vw !important;
-        overflow-x: hidden !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-    }
-
-    /* テーブルのモバイル専用スクロール */
-    [data-testid="stTable"] {
-        display: block !important;
-        overflow-x: auto !important;
-        white-space: nowrap !important;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    /* メトリクスサイズの調整 */
-    div[data-testid="stMetricValue"] {
-        font-size: 1.5rem !important;
-    }
-
-    /* 画像コンテナの幅をデバイスに強制追従させる */
-    div[data-testid="stVerticalBlock"]>div {
-        width: 100% !important;
-    }
-}
-
-/* ============================================================
-   6. FULL-WIDTH CUSTOM FOOTER
-   ============================================================ */
-.custom-footer {
-    width: 100vw !important;
-    position: relative !important;
-    left: 50% !important;
-    margin-left: -50vw !important;
-    background-color: #ffffff !important;
-    color: #64748b !important;
-    text-align: center !important;
-    padding: 40px 0 30px 0 !important;
-    border-top: 1px solid #e2e8f0 !important;
-    margin-top: 80px !important;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.02) !important;
-}
-
-.custom-footer a {
-    color: #6366f1 !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
-}
-
-/* ============================================================
-   1. アプリ全体の基盤（背景・フォント・共通余白）
+   2. BASE — 背景・フォント・全体設定
    ============================================================ */
 .stApp {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
+  background-color: var(--bg-surface) !important;
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.025) 1px, transparent 1px) !important;
+  background-size: 24px 24px !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-dot) !important;
 }
 
-/* 親しみやすく、かつプロフェッショナルなフォントセット */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-li,
-span,
-label,
-ul,
-li,
-button {
-    color: #0d1b2a !important;
-    font-family: 'Segoe UI', 'Roboto', 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif !important;
-    letter-spacing: 0.02em;
+.stApp, .main, .block-container { overflow-x: hidden !important; }
+
+section.main .block-container {
+  max-width: 100% !important;
+  padding-left: clamp(0.75rem, 2.5vw, 2.5rem) !important;
+  padding-right: clamp(0.75rem, 2.5vw, 2.5rem) !important;
+  padding-top: 1.5rem !important;
+}
+
+/* ---- 全文字要素 ---- */
+p, span, li, label, ul {
+  color: var(--text-main) !important;
+  font-family: var(--font-dot) !important;
+  letter-spacing: 0.04em;
+  line-height: 1.85;
 }
 
 /* ============================================================
-   2. 見出し・ナビゲーション（Subheader / Tabs）
+   3. TYPOGRAPHY — 見出し
    ============================================================ */
 
-/* st.title & st.header: ページの主役 */
-.stApp h1,
-.stApp h2 {
-    color: #9392e0 !important;
-    /* 青とピンクの中間色（ラベンダーブルー） */
-    font-weight: 800 !important;
-    padding-bottom: 15px !important;
-    position: relative !important;
-    letter-spacing: 0.05em !important;
-    margin-top: 2rem !important;
-}
-
+/* h1: ページタイトル */
 .stApp h1 {
-    font-size: 2.2rem !important;
+  font-family: var(--font-pixel) !important;
+  font-size: clamp(1.05rem, 2.8vw, 2rem) !important;
+  font-weight: 400 !important;
+  color: var(--color-cyan) !important;
+  text-shadow: 3px 3px 0px #003355, 6px 6px 0px #001122 !important;
+  letter-spacing: 0.06em !important;
+  padding-bottom: 0.4rem !important;
+  margin-top: 2rem !important;
+  border-bottom: 2px solid var(--border-cyan) !important;
+  border-radius: 0 !important;
 }
 
+/* h2: セクションヘッダー */
 .stApp h2 {
-    font-size: 1.8rem !important;
+  font-family: var(--font-pixel) !important;
+  font-size: clamp(0.8rem, 2.2vw, 1.3rem) !important;
+  font-weight: 400 !important;
+  color: var(--color-pink) !important;
+  text-shadow: 2px 2px 0px #550033 !important;
+  padding: 10px 18px !important;
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-pink) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-pink) !important;
+  display: inline-block !important;
+  margin-top: 2.2rem !important;
+  margin-bottom: 0.8rem !important;
 }
 
+/* h3: サブヘッダー */
 .stApp h3 {
-    background-color: #ffffff !important;
-    padding: 15px 25px !important;
-    border-radius: 15px !important;
-    border: 1.5px solid #e0e6ed !important;
-    border-left: 12px solid #e0e6ed !important;
-    box-shadow: 6px 6px 0px rgba(224, 230, 237, 0.5) !important;
-    margin-top: 2.5rem !important;
-    margin-bottom: 1.2rem !important;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-
-    /* 文字スタイル */
-    font-size: 1.4rem !important;
-    font-weight: 700 !important;
-    color: #1a365d !important;
-    display: flex;
-    align-items: center;
+  font-family: var(--font-dot) !important;
+  font-size: clamp(0.95rem, 2vw, 1.2rem) !important;
+  font-weight: 700 !important;
+  color: var(--color-cyan) !important;
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-main) !important;
+  border-left: 5px solid var(--color-cyan) !important;
+  border-radius: 0 !important;
+  padding: 10px 18px !important;
+  margin-top: 2rem !important;
+  margin-bottom: 0.8rem !important;
+  box-shadow: var(--shadow-sm) !important;
+  display: flex;
+  align-items: center;
 }
 
-/* subheaderの文字の前に自動で小さな「AIチップ」風アイコンを添える */
 .stApp h3::before {
-    content: '◈';
-    margin-right: 10px;
-    color: #3a7bd5;
-    font-size: 1.2rem;
+  content: '▶';
+  margin-right: 10px;
+  color: var(--color-cyan);
+  font-size: 0.75rem;
 }
 
-/* st.tabs: ボタン風デザイン  */
-div[data-testid="stTabs"] {
-    gap: 10px !important;
-}
-
-div[data-testid="stTabs"] button {
-    background-color: #ffffff !important;
-    border: 1px solid #e0e0e0 !important;
-    border-radius: 10px 10px 0 0 !important;
-    padding: 10px 20px !important;
-    transition: all 0.3s ease !important;
-}
-
-div[data-testid="stTabs"] button:hover {
-    border-bottom: 3px solid #e6accc !important;
-    color: #e6accc !important;
-    transform: translateY(-2px) !important;
-}
-
-div[data-testid="stTabs"] button[aria-selected="true"] {
-    background-color: #e6accc !important;
-    color: #ffffff !important;
-    z-index: 2;
-}
-
-div[data-testid="stTabs"] button p {
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-}
-
-/* ============================================================
-   st.divider: 短めのセミ透明・光のボーダー
-   ============================================================ */
-hr {
-    border: none !important;
-    height: 2px !important;
-    background: linear-gradient(to right,
-            transparent,
-            rgba(81, 135, 217, 0.838) 100% transparent) !important;
-    width: 9% !important;
-    margin: 2rem auto !important;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1) !important;
-}
-
-/* ============================================================
-   st.header
-   ============================================================ */
+/* st.header ブロック */
 div[data-testid="stHeaderBlock"] h2,
 .stHeading h2 {
-    color: #3a7bd5 !important;
-    font-size: 1.8rem !important;
-    font-weight: 800 !important;
-    padding: 15px 45px !important;
-    /* 左右に少しゆとりを持たせてプロ感を出す */
-    position: relative !important;
-    display: inline-block !important;
-    margin-top: 2rem !important;
-    margin-bottom: 1rem !important;
-    background-color: #ffffff !important;
-    /* 真っ白な背景で清潔感を */
-    border-radius: 10px !important;
-    /* 軽い影をつけて、背景から少し浮き立たせます */
-    box-shadow: 0 4px 10px rgba(58, 123, 213, 0.1) !important;
+  font-family: var(--font-pixel) !important;
+  font-size: clamp(0.8rem, 2.2vw, 1.3rem) !important;
+  color: var(--color-cyan) !important;
+  text-shadow: 2px 2px 0px #003355 !important;
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-cyan) !important;
+  border-radius: 0 !important;
+  padding: 10px 20px !important;
+  display: inline-block !important;
+  margin-top: 2.5rem !important;
+  margin-bottom: 1.2rem !important;
+  box-shadow: var(--shadow-cyan) !important;
 }
 
-div[data-testid="stHeaderBlock"] h2,
-.stHeading h2 {
-    color: #3a7bd5 !important;
-    /* 信頼の青 */
-    font-size: 1.6rem !important;
-    font-weight: 800 !important;
-
-    /* 背景と枠の設定 */
-    background-color: #ffffff !important;
-    border: 3px solid #3a7bd5 !important;
-    /* 青い枠でぐるっと囲む */
-    border-radius: 12px !important;
-
-    /* 余白の調整 */
-    padding: 12px 25px !important;
-    display: inline-block !important;
-    /* 文字の長さに合わせる */
-
-    /* 外側の余白 */
-    margin-top: 2.5rem !important;
-    margin-bottom: 1.5rem !important;
-
-    /* シャドウを入れて少し浮かせる（プロの隠し味） */
-    box-shadow: 0 4px 12px rgba(58, 123, 213, 0.15) !important;
-}
-
-/* 以前の ::before と ::after （カギ括弧）の指定を消去するために空にする */
 div[data-testid="stHeaderBlock"] h2::before,
 .stHeading h2::before,
 div[data-testid="stHeaderBlock"] h2::after,
 .stHeading h2::after {
-    display: none !important;
-    content: none !important;
+  display: none !important;
+  content: none !important;
 }
 
-/* --- サイドバー全体の背景と質感 --- */
+/* ============================================================
+   4. SIDEBAR — サイドバー
+   ============================================================ */
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%) !important;
-    border-right: 1px solid rgba(59, 130, 246, 0.3) !important;
-    box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2) !important;
+  background: var(--bg-base) !important;
+  border-right: 2px solid var(--border-cyan) !important;
+  box-shadow: 4px 0 0px #003355 !important;
 }
 
-/* サイドバー内のテキストカラーを一括設定 */
 [data-testid="stSidebar"] .stMarkdown,
 [data-testid="stSidebar"] p {
-    color: #e2e8f0 !important;
+  color: var(--text-main) !important;
+  font-family: var(--font-dot) !important;
 }
 
-/* ナビゲーションリンクのボタン化（ホバー演出） */
 [data-testid="stSidebar"] a {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 12px !important;
-    padding: 10px !important;
-    margin-bottom: 8px !important;
-    transition: all 0.3s ease !important;
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-dim) !important;
+  border-radius: 0 !important;
+  padding: 10px !important;
+  margin-bottom: 8px !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  box-shadow: var(--shadow-sm) !important;
 }
 
 [data-testid="stSidebar"] a:hover {
-    background: rgba(59, 130, 246, 0.2) !important;
-    border-color: #3b82f6 !important;
-    transform: translateX(5px);
+  background: var(--bg-elevated) !important;
+  border-color: var(--color-cyan) !important;
+  transform: translateX(4px) translateY(4px) !important;
+  box-shadow: 0px 0px 0px #000 !important;
 }
 
-/* 🛡️ システムステータス（成功時）のカスタム */
 [data-testid="stSidebar"] .stAlert {
-    background: rgba(16, 185, 129, 0.1) !important;
-    color: #10b981 !important;
-    border: 1px solid #10b981 !important;
-}
-
-/* 🔑 アクセスキー（Hash表示）の装飾 */
-.access-key-box {
-    background: #000000 !important;
-    border: 1px dashed #3b82f6 !important;
-    padding: 10px;
-    border-radius: 8px;
-    font-family: 'Courier New', Courier, monospace;
-    text-align: center;
-}
-
-/* ラボ・ガイドボックスのデザイン */
-.guide-box {
-    background: rgba(255, 255, 255, 0.6) !important;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 15px;
-    padding: 20px;
-    height: 100%;
-    transition: all 0.3s ease;
-}
-
-.guide-box:hover {
-    background: rgba(255, 255, 255, 0.9) !important;
-    border-color: #3b82f6;
-    transform: translateY(-5px);
-}
-
-.guide-box h4 {
-    color: #1e3a8a;
-    margin-bottom: 10px;
-    font-size: 1.1rem;
-    border-left: 4px solid #3b82f6;
-    padding-left: 10px;
-}
-
-.guide-box p {
-    color: #475569;
-    font-size: 0.9rem;
-    line-height: 1.6;
+  background: rgba(5, 255, 161, 0.08) !important;
+  color: var(--color-green) !important;
+  border: 2px solid var(--border-green) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-green) !important;
 }
 
 /* ============================================================
-   3. 特殊ボックス（解説・ポイント・警告）
+   5. TABS — タブナビゲーション
    ============================================================ */
+div[data-testid="stTabs"] { gap: 4px !important; }
 
-/* 解説ボックス (explanation-box) */
-.explanation-box {
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    border-left: 8px solid #3a7bd5;
-    color: #0d1b2a !important;
-    line-height: 1.6;
+div[data-testid="stTabs"] button {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-main) !important;
+  border-radius: 0 !important;
+  padding: 8px 16px !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  box-shadow: 3px 3px 0px #000 !important;
+  color: var(--text-dim) !important;
 }
 
-.explanation-box * {
-    color: #0d1b2a !important;
+div[data-testid="stTabs"] button:hover {
+  border-color: var(--border-pink) !important;
+  color: var(--color-pink) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 3px 5px 0px #000 !important;
 }
 
-.explanation-box h3 {
-    color: #3a7bd5 !important;
-    font-weight: bold !important;
-    margin-top: 0 !important;
+div[data-testid="stTabs"] button[aria-selected="true"] {
+  background: var(--color-pink) !important;
+  color: var(--bg-base) !important;
+  border-color: var(--border-pink) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 3px 6px 0px #550033 !important;
 }
 
-.explanation-box b,
-.explanation-box strong {
-    color: #000000 !important;
-    font-weight: 900 !important;
-}
-
-/* ポイントボックス (point-box) */
-.point-box {
-    background-color: #f0f7ff;
-    padding: 18px;
-    border-radius: 15px;
-    border: 2px dashed #3a7bd5;
-    margin: 15px 0px;
-}
-
-/* 警告ボックス (warning-box) */
-.warning-box {
-    background-color: #fff5f5;
-    padding: 15px;
-    border-radius: 12px;
-    border-left: 5px solid #ff4b4b;
-    color: #a00000 !important;
-    font-weight: bold;
+div[data-testid="stTabs"] button p {
+  font-size: clamp(0.78rem, 1.5vw, 1rem) !important;
+  font-weight: bold !important;
+  font-family: var(--font-dot) !important;
 }
 
 /* ============================================================
-   4. 入力ウィジェット（ボタン・ラジオ・セレクト）
+   6. BUTTONS — ボタン
    ============================================================ */
-div.stButton>button {
-    height: 80px !important;
-    border-radius: 20px !important;
-    border: 2px solid #3a7bd5 !important;
-    background-color: #ffffff !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-    width: 100%;
+div.stButton > button {
+  height: auto !important;
+  min-height: 58px !important;
+  border-radius: 0 !important;
+  border: 2px solid var(--border-cyan) !important;
+  background: var(--bg-card) !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  box-shadow: 4px 4px 0px #002244 !important;
+  width: 100% !important;
 }
 
-div.stButton>button:hover {
-    transform: translateY(-5px) !important;
-    background-color: #f0f7ff !important;
-    box-shadow: 0 12px 20px rgba(58, 123, 213, 0.3) !important;
+div.stButton > button:hover {
+  transform: translateX(2px) translateY(2px) !important;
+  box-shadow: 2px 2px 0px #002244 !important;
+  background: var(--bg-elevated) !important;
 }
 
-div.stButton>button p {
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-    color: #3a7bd5 !important;
+div.stButton > button:active {
+  transform: translateX(4px) translateY(4px) !important;
+  box-shadow: 0px 0px 0px #002244 !important;
 }
 
-/* --- 改良：透明レイヤー専用設定（既存デザインを汚さない） --- */
-.clickable-card-container {
-    position: relative;
-    /* 親として固定 */
-    width: 100%;
-    margin-bottom: 20px;
+div.stButton > button p {
+  font-size: clamp(0.78rem, 1.5vw, 1rem) !important;
+  font-weight: bold !important;
+  color: var(--color-cyan) !important;
+  font-family: var(--font-dot) !important;
 }
 
-/* カードの上に被さる透明ボタンのラッパー */
-.invisible-overlay {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    z-index: 10 !important;
-    /* カードより上に配置 */
+/* 透明オーバーレイボタン */
+.clickable-card-container { position: relative; width: 100%; margin-bottom: 20px; }
+
+.invisible-overlay,
+.invisible-button {
+  position: absolute !important;
+  top: 0 !important; left: 0 !important;
+  width: 100% !important; height: 100% !important;
+  z-index: 10 !important;
 }
 
-/* 既存のボタンデザインを上書きして「透明化」する専用クラス */
-.invisible-overlay .stButton>button {
-    height: 100% !important;
-    /* カードの高さ一杯に広がる */
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: transparent !important;
-    padding: 0 !important;
-    margin: 0 !important;
+.invisible-overlay .stButton > button,
+.invisible-button .stButton > button {
+  height: 100% !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: transparent !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-.invisible-overlay .stButton>button:hover {
-    background: rgba(59, 130, 246, 0.05) !important;
-    /* わずかな反応 */
-    transform: none !important;
-    /* カード自体が動くのでボタンは動かさない */
+.invisible-overlay .stButton > button:hover,
+.invisible-button .stButton > button:hover {
+  background: rgba(0, 212, 255, 0.05) !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
-/* ボタン内のテキスト（pタグ）も完全に隠す */
-.invisible-overlay .stButton>button p {
-    display: none !important;
+.invisible-overlay .stButton > button p,
+.invisible-button .stButton > button p { display: none !important; }
+
+/* ============================================================
+   7. INPUTS — ラジオ・セレクト
+   ============================================================ */
+div[data-testid="stRadio"] > label p {
+  font-size: 1rem !important;
+  font-weight: bold !important;
+  color: var(--color-cyan) !important;
+  font-family: var(--font-dot) !important;
 }
 
-/* ラジオボタン全体のラベル（質問文など） */
-div[data-testid="stRadio"]>label p {
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-    color: #3a7bd5 !important;
-}
-
-/* ラジオボタンの選択肢グループのコンテナ */
 div[data-testid="stRadio"] div[role="radiogroup"] {
-    gap: 10px !important;
-    padding: 5px 0 !important;
+  gap: 8px !important;
+  padding: 4px 0 !important;
 }
 
-/* 各選択肢のラベル枠（タイル風に変更） */
 div[data-testid="stRadio"] div[role="radiogroup"] label {
-    background-color: #ffffff !important;
-    border: 2px solid #e0e0e0 !important;
-    border-radius: 12px !important;
-    padding: 10px 20px !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05) !important;
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-dim) !important;
+  border-radius: 0 !important;
+  padding: 10px 16px !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  cursor: pointer !important;
+  box-shadow: 3px 3px 0px #000 !important;
 }
 
-/* マウスホバー時の動き */
 div[data-testid="stRadio"] div[role="radiogroup"] label:hover {
-    border-color: #3a7bd5 !important;
-    transform: translateY(-2px) !important;
-    background-color: #f0f7ff !important;
+  border-color: var(--border-cyan) !important;
+  transform: translateX(2px) translateY(2px) !important;
+  box-shadow: 1px 1px 0px #000 !important;
+  background: var(--bg-elevated) !important;
 }
 
-/* 選択されている時のスタイル */
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-selected="true"] {
-    border-color: #3a7bd5 !important;
-    background-color: #3a7bd5 !important;
-    box-shadow: 0 4px 10px rgba(58, 123, 213, 0.3) !important;
+  border-color: var(--border-cyan) !important;
+  background: var(--color-cyan) !important;
+  box-shadow: 3px 3px 0px #003355 !important;
+  transform: none !important;
 }
 
-/* 選択されている時の文字色を白くする */
 div[data-testid="stRadio"] div[role="radiogroup"] label[data-selected="true"] p {
-    color: #ffffff !important;
+  color: var(--bg-base) !important;
 }
 
-/* ラジオボタンの丸いポッチ自体を消す（タイルそのものがボタンになるため） */
 div[data-testid="stRadio"] div[role="radiogroup"] label div[data-testid="stMarker"] {
-    display: none !important;
+  display: none !important;
 }
 
-/* 選択肢のテキストサイズ調整 */
 div[data-testid="stRadio"] div[role="radiogroup"] label div p {
-    font-size: 1.1rem !important;
-    font-weight: bold !important;
-    margin: 0 !important;
+  font-size: 1rem !important;
+  font-weight: bold !important;
+  margin: 0 !important;
+  font-family: var(--font-dot) !important;
 }
 
 /* セレクトボックス */
-div[data-baseweb="select"]>div {
-    background-color: #ffffff !important;
-    color: #0d1b2a !important;
-    border: 1px solid #3a7bd5 !important;
+div[data-baseweb="select"] > div {
+  background: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border: 2px solid var(--border-cyan) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-sm) !important;
 }
 
-/* ポップアップ・メニュー内の文字（視認性向上） */
-div[role="listbox"] *,
-div[role="menu"] *,
-div[data-baseweb="popover"] *,
-div[role="tooltip"] * {
-    color: #ffffff !important;
-}
-
-/* ============================================================
-   5. データ・画像表示（表・キャプション）
-   ============================================================ */
-/* メトリクス全体を包む箱の設定 */
-div[data-testid="stMetric"] {
-    background-color: #ffffff !important;
-    border: 2px solid #3a7bd5 !important;
-    /* 爽やかな青い枠 */
-    border-radius: 15px !important;
-    padding: 15px !important;
-    text-align: center !important;
-    /* 全体を中央寄せ */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* ラベル (🔴 Red など) の調整 */
-div[data-testid="stMetricLabel"] {
-    display: flex !important;
-    justify-content: center !important;
-    font-weight: bold !important;
-    color: #555 !important;
-}
-
-/* 数値 (255 など) の調整 */
-div[data-testid="stMetricValue"] {
-    font-family: 'Courier New', Courier, monospace !important;
-    /* デジタルっぽく */
-    font-size: 2.2rem !important;
-    color: #333 !important;
-    display: flex !important;
-    justify-content: center !important;
-}
-
-/* カラム間の隙間を少し広げて見やすくする */
-div[data-testid="column"] {
-    padding: 0 10px !important;
-}
-
-/* データフレーム */
-[data-testid="stTable"] td,
-[data-testid="stTable"] th {
-    width: 20px !important;
-    /* 80pxから50pxに小さく */
-    height: 20px !important;
-    /* 高さを幅に合わせる */
-    min-width: 20px !important;
-    max-width: 20px !important;
-    padding: 0 !important;
-    /* 余白を削ってコンパクトに */
-    text-align: center !important;
-    vertical-align: middle !important;
-    font-size: 1.0rem !important;
-    /* 数字も少し小さくして収まりを良くする */
-}
-
-/* 枠全体の幅を「100%」から「中身に合わせる」に変更 */
-div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anchor-green) {
-    background-color: #ffffff !important;
-    border: 3px dashed #adff2f !important;
-    border-radius: 25px !important;
-
-    /* 横幅を「最大」から「中身がちょうど収まるサイズ」に変更 */
-    display: inline-block !important;
-    min-width: 800px !important;
-    /* バランスの良い最小幅 */
-    width: auto !important;
-
-    padding: 30px !important;
-    margin: 2rem auto !important;
-    /* 中央寄せ */
-    display: block !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* 画像キャプション */
-div[data-testid="stImageCaption"] {
-    color: #000000 !important;
-    font-weight: 600 !important;
-    text-align: center;
-}
-
-/* ============================================================
-   1. 実験エリア (Lab Area) & 全般
-   ============================================================ */
-/* 特定のコンテナだけを囲う（二重枠防止版） */
-div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anchor-green) {
-    background-color: #ffffff !important;
-    border: 3px dashed #adff2f !important;
-    border-radius: 25px !important;
-    padding: 30px !important;
-    margin: 2rem auto !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05) !important;
-}
-
-/* 目印は表示しない */
-.lab-anchor-green {
-    display: none;
-}
-
-/* 2. データテーブル (Square Cells) */
-[data-testid="stTable"] td,
-[data-testid="stTable"] th {
-    width: 20px !important;
-    height: 35px !important;
-    min-width: 20px !important;
-    max-width: 20px !important;
-    padding: 0 !important;
-    text-align: center !important;
-    vertical-align: middle !important;
-    font-size: 1.0rem !important;
-}
-
-/* 3. メトリクス (RGB Panels) */
-div[data-testid="stMetric"] {
-    background-color: #ffffff !important;
-    border: 2px solid #3a7bd5 !important;
-    border-radius: 15px !important;
-    padding: 15px !important;
-    text-align: center !important;
-}
-
-div[data-testid="stMetricLabel"] {
-    justify-content: center !important;
-    font-weight: bold !important;
-}
-
-div[data-testid="stMetricValue"] {
-    justify-content: center !important;
-    font-family: 'Courier New', monospace !important;
-}
-
-/* 4. ボーダーライン (Gradient Divider) */
-hr {
-    border: none !important;
-    height: 2px !important;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6), transparent) !important;
-    width: 80% !important;
-    margin: 2rem auto !important;
-}
-
-/* 5. ギャラリー & システムステータス */
-.status-header {
-    background: #262730;
-    color: #adff2f;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border-left: 5px solid #adff2f;
-    font-family: 'Courier New', monospace;
-    margin-bottom: 20px;
-}
-
-.img-frame {
-    background-color: #eeeeee !important;
-    padding: 20px !important;
-    border-radius: 15px !important;
-    text-align: center !important;
-    border: 1px solid #dcdcdc !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-}
-
-.step-badge {
-    background: linear-gradient(135deg, #3a7bd5, #00d2ff) !important;
-    color: white !important;
-    padding: 5px 15px !important;
-    border-radius: 20px !important;
-    font-size: 0.75rem !important;
-    font-weight: bold !important;
-    margin-bottom: 10px !important;
-}
-
-.caption-text {
-    color: #2c3e50 !important;
-    font-weight: 800 !important;
-    font-size: 1rem !important;
-}
-
-/* --- アニメーション設定 --- */
-@keyframes pulse-red {
-
-    0%,
-    100% {
-        opacity: 0.5;
-        transform: scale(1);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scale(1.1);
-    }
-}
-
-@keyframes bounce-down {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(15px);
-    }
-}
-
-/* ギャラリー全体の共通設定 */
-.img-frame {
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    position: relative;
-    text-align: center;
-    background-color: #f9f9f9;
-}
-
-.frame-phase2 {
-    background-color: #e8f4f8;
-}
-
-.frame-result {
-    background-color: #fff0f0;
-    border: 2px solid #ffcccc;
-}
-
-/* 矢印（横向き：➡） */
-.row-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 185px;
-    height: 100%;
-    padding-top: 50%;
-    font-size: 65px;
-    color: #ff4b4b;
-    /* 赤に変更 */
-    font-weight: bold;
-    animation: pulse-red 2s infinite;
-    /* 前のパルスを適用 */
-}
-
-/* 折り返し矢印（SVG）のアニメーション */
-.show-arrow-svg {
-    display: inline-block;
-    animation: bounce-down 1.5s infinite, pulse-red 3s infinite;
-}
-
-/* 折り返し用の太い赤矢印（SVG） */
-.turn-arrow-container {
-    animation: bounce-down 1.5s infinite;
-    /* 前のバウンドを適用 */
-}
-
-[data-testid="stHorizontalBlock"] {
-    display: flex !important;
-    flex-direction: row !important;
-    /* 縦並びを禁止 */
-    flex-wrap: nowrap !important;
-    /* 折り返しを禁止 */
-    align-items: flex-start !important;
-}
-
-/* 2. 各列が潰れすぎないように、かつ幅を比率で保つ */
-[data-testid="column"] {
-    min-width: 0 !important;
-    /* 幅が狭くなるのを許可する */
-    flex-shrink: 1 !important;
-    flex-grow: 1 !important;
-}
-
-/* ============================================================
-   デバイスや画面の大きさに合わせた自動ズーム（横スクロール禁止）
-   ============================================================ */
-
-/* アプリ全体で「横スクロール」を完全に禁止 */
-.stApp,
-.main,
-.block-container {
-    overflow-x: hidden !important;
-}
-
-/* 1. レイアウト全体をそのままの状態(100%)とする */
-.main .block-container {
-    zoom: 1 !important;
-}
-
-/* 2. 写真(Pythonで指定した width=〇 )をそのままの状態(100%)とする */
-/* max-widthを追加して、万が一枠をはみ出す画像があっても収めるようにする */
-[data-testid="stImage"],
-.img-frame img,
-.html-zoom-img {
-    zoom: 1 !important;
-    max-width: 100% !important;
-    height: auto !important;
-}
-
-/* 1. 横スクロールを完全に禁止し、余白を最適化 */
-section.main .block-container {
-    max-width: 100%;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    padding-top: 2rem !important;
-}
-
-/* 2. 画像の制御：親要素を突き破らないようにする */
-[data-testid="stImage"],
-.img-frame img,
-.html-zoom-img {
-    width: 100% !important;
-    /* 親の幅いっぱいに広がる */
-    max-width: 100% !important;
-    /* 画面からはみ出さない */
-    height: auto !important;
-    /* 比率を維持 */
-}
-
-/* 3. デバイスごとの微調整（メディアクエリ） */
-
-/* タブレット〜スマホ */
-@media (max-width: 768px) {
-
-    /* 文字サイズは少し下げる程度に留める（読みやすさ重視） */
-    .stMarkdown,
-    p,
-    span,
-    label {
-        font-size: 0.95rem !important;
-    }
-
-    /* 2列に並べていた要素を1列にする設定（もしあれば） */
-    [data-testid="column"] {
-        width: 100% !important;
-        flex: 1 1 100% !important;
-    }
-}
-
-/* 小さなスマホ */
-@media (max-width: 480px) {
-
-    .stMarkdown,
-    p,
-    span,
-    label {
-        font-size: 0.9rem !important;
-    }
-}
-
-img {
-    max-width: 100%;
-    /* 親要素より大きくならない */
-    height: auto;
-    /* 比率を維持する */
-}
-
-/* ============================================================
-   6. その他装飾
-   ============================================================ */
-.highlight-text {
-    background: linear-gradient(transparent 70%, #ffdeeb 70%);
-    font-weight: bold;
+div[role="listbox"] *, div[role="menu"] *,
+div[data-baseweb="popover"] *, div[role="tooltip"] * {
+  color: var(--text-main) !important;
+  background: var(--bg-elevated) !important;
 }
 
 [data-testid="stWidgetLabel"] p {
-    font-size: 0.9rem !important;
-    font-weight: bold !important;
+  font-size: 0.9rem !important;
+  font-weight: bold !important;
+  color: var(--text-dim) !important;
 }
-
 
 /* ============================================================
-   7. メインタイトル・アニメーション装飾
+   8. CONTENT BOXES — コンテンツカード類
    ============================================================ */
 
-/* タイトル全体のコンテナ */
+/* 解説ボックス */
+.explanation-box {
+  background: var(--bg-card) !important;
+  padding: 20px 24px !important;
+  border: 2px solid var(--border-main) !important;
+  border-left: 6px solid var(--border-cyan) !important;
+  border-radius: 0 !important;
+  box-shadow: var(--shadow-cyan) !important;
+  color: var(--text-main) !important;
+  line-height: 1.85;
+  margin-bottom: 20px;
+}
+
+.explanation-box * { color: var(--text-main) !important; }
+
+.explanation-box h3 {
+  color: var(--color-cyan) !important;
+  font-family: var(--font-dot) !important;
+  font-weight: bold !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.4rem !important;
+  /* ネストされたh3はサイドバー装飾を外す */
+  background: transparent !important;
+  border: none !important;
+  border-left: 3px solid var(--color-cyan) !important;
+  box-shadow: none !important;
+  padding: 4px 0 4px 10px !important;
+  display: block !important;
+}
+
+.explanation-box h3::before { display: none !important; }
+
+.explanation-box b,
+.explanation-box strong {
+  color: var(--color-yellow) !important;
+  font-weight: 900 !important;
+}
+
+/* ポイントボックス */
+.point-box {
+  background: var(--bg-card) !important;
+  padding: 18px !important;
+  border: 2px dashed var(--border-cyan) !important;
+  border-radius: 0 !important;
+  margin: 15px 0 !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* 警告ボックス */
+.warning-box {
+  background: var(--bg-card) !important;
+  padding: 15px !important;
+  border: 2px solid var(--color-red) !important;
+  border-left: 6px solid var(--color-red) !important;
+  border-radius: 0 !important;
+  color: var(--color-red) !important;
+  font-weight: bold !important;
+  box-shadow: 4px 4px 0px #440000 !important;
+}
+
+/* ヒーローセクション */
+.hero-title {
+  font-family: var(--font-pixel) !important;
+  font-size: clamp(1.4rem, 3.5vw, 2.8rem) !important;
+  font-weight: 400 !important;
+  color: var(--color-cyan) !important;
+  text-shadow: 4px 4px 0px #003355, 8px 8px 0px #001122 !important;
+  line-height: 1.4;
+  margin-bottom: 0.5rem !important;
+}
+
+.hero-sub {
+  font-size: clamp(0.82rem, 1.5vw, 1rem) !important;
+  color: var(--text-dim) !important;
+  border-left: 4px solid var(--border-cyan) !important;
+  padding-left: 15px !important;
+  margin-bottom: 1.5rem !important;
+  font-family: var(--font-dot) !important;
+}
+
+/* フィーチャーカード (ミッションカード) */
+.feature-card {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-main) !important;
+  border-radius: 0 !important;
+  padding: 24px !important;
+  box-shadow: var(--shadow-md) !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  height: 100% !important;
+}
+
+.feature-card:hover {
+  transform: translateX(4px) translateY(4px) !important;
+  box-shadow: 0px 0px 0px #000 !important;
+  border-color: var(--border-cyan) !important;
+}
+
+.feature-card h3 {
+  background: transparent !important;
+  border: none !important;
+  border-left: 4px solid var(--color-cyan) !important;
+  box-shadow: none !important;
+  padding: 4px 0 4px 12px !important;
+  margin-top: 0 !important;
+  display: block !important;
+}
+
+.feature-card h3::before { display: none !important; }
+
+/* ロックカード */
+.locked-card {
+  border-color: var(--border-dim) !important;
+  opacity: 0.6 !important;
+}
+
+.locked-card:hover {
+  transform: none !important;
+  box-shadow: var(--shadow-md) !important;
+  border-color: var(--border-dim) !important;
+  cursor: not-allowed;
+}
+
+/* インサイトカード (ターミナル風) */
+.insight-card {
+  background: var(--bg-base) !important;
+  color: var(--color-green) !important;
+  border: 2px solid var(--border-green) !important;
+  border-left: 6px solid var(--color-green) !important;
+  border-radius: 0 !important;
+  padding: 20px !important;
+  font-family: var(--font-mono) !important;
+  box-shadow: 4px 4px 0px #002211 !important;
+  line-height: 1.7;
+}
+
+.insight-card * { color: var(--color-green) !important; }
+
+/* マスバッジ */
+.math-badge {
+  font-family: var(--font-mono) !important;
+  background: var(--bg-base) !important;
+  color: var(--color-cyan) !important;
+  padding: 4px 10px !important;
+  border: 2px solid var(--border-cyan) !important;
+  border-radius: 0 !important;
+  font-size: 0.82rem !important;
+  box-shadow: 2px 2px 0px #003355 !important;
+  display: inline-block !important;
+}
+
+/* ガイドボックス */
+.guide-box {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-dim) !important;
+  border-radius: 0 !important;
+  padding: 20px !important;
+  height: 100% !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.guide-box:hover {
+  border-color: var(--border-cyan) !important;
+  transform: translateX(3px) translateY(3px) !important;
+  box-shadow: 0px 0px 0px #000 !important;
+}
+
+.guide-box h4 {
+  color: var(--color-cyan) !important;
+  margin-bottom: 10px !important;
+  font-size: 1rem !important;
+  border-left: 4px solid var(--border-cyan) !important;
+  padding-left: 10px !important;
+  font-family: var(--font-dot) !important;
+}
+
+.guide-box p {
+  color: var(--text-dim) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.7 !important;
+}
+
+/* アクセスキーボックス */
+.access-key-box {
+  background: var(--bg-base) !important;
+  border: 2px dashed var(--border-cyan) !important;
+  padding: 10px;
+  font-family: var(--font-mono);
+  text-align: center;
+}
+
+/* ============================================================
+   9. METRICS & DATA — メトリクス・データ表示
+   ============================================================ */
+div[data-testid="stMetric"] {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-cyan) !important;
+  border-radius: 0 !important;
+  padding: 15px !important;
+  text-align: center !important;
+  box-shadow: var(--shadow-cyan) !important;
+}
+
+div[data-testid="stMetricLabel"] {
+  display: flex !important;
+  justify-content: center !important;
+  font-weight: bold !important;
+  color: var(--text-dim) !important;
+}
+
+div[data-testid="stMetricValue"] {
+  font-family: var(--font-mono) !important;
+  font-size: clamp(1.4rem, 2.8vw, 2rem) !important;
+  color: var(--color-cyan) !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+div[data-testid="column"] { padding: 0 8px !important; }
+
+[data-testid="stTable"] td,
+[data-testid="stTable"] th {
+  width: 20px !important;
+  height: 35px !important;
+  min-width: 20px !important;
+  max-width: 20px !important;
+  padding: 0 !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  font-size: 0.88rem !important;
+  color: var(--text-main) !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-dim) !important;
+}
+
+div[data-testid="stImageCaption"] {
+  color: var(--text-dim) !important;
+  font-weight: 600 !important;
+  text-align: center;
+  font-family: var(--font-dot) !important;
+}
+
+/* ============================================================
+   10. GALLERY & STATUS — ギャラリー・ステータス
+   ============================================================ */
+.status-header {
+  background: var(--bg-base) !important;
+  color: var(--color-green) !important;
+  padding: 10px 20px !important;
+  border: 2px solid var(--border-green) !important;
+  border-left: 6px solid var(--color-green) !important;
+  border-radius: 0 !important;
+  font-family: var(--font-mono) !important;
+  margin-bottom: 20px !important;
+  box-shadow: var(--shadow-green) !important;
+}
+
+.img-frame {
+  background: var(--bg-card) !important;
+  padding: 10px !important;
+  border: 2px solid var(--border-main) !important;
+  border-radius: 0 !important;
+  text-align: center !important;
+  position: relative !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.frame-phase2 {
+  background: var(--bg-elevated) !important;
+  border-color: var(--border-cyan) !important;
+}
+
+.frame-result {
+  background: var(--bg-card) !important;
+  border-color: var(--color-red) !important;
+  box-shadow: 4px 4px 0px #440000 !important;
+}
+
+.step-badge {
+  background: var(--color-cyan) !important;
+  color: var(--bg-base) !important;
+  padding: 4px 12px !important;
+  font-size: clamp(0.6rem, 1vw, 0.72rem) !important;
+  font-weight: bold !important;
+  margin-bottom: 8px !important;
+  display: inline-block !important;
+  box-shadow: 2px 2px 0px #003355 !important;
+  font-family: var(--font-pixel) !important;
+  letter-spacing: 0.05em !important;
+  border-radius: 0 !important;
+}
+
+.caption-text {
+  color: var(--text-main) !important;
+  font-weight: 800 !important;
+  font-size: 0.9rem !important;
+  font-family: var(--font-dot) !important;
+}
+
+/* ============================================================
+   11. TITLE AREA — メインタイトルアニメーション
+   ============================================================ */
 .main-title-container {
-    text-align: center;
-    padding: 2rem 1rem;
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 30px;
-    border: 3px solid #ffffff;
-    box-shadow: 0 10px 30px rgba(58, 123, 213, 0.1);
-    margin-bottom: 3rem;
+  text-align: center;
+  padding: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 2vw, 1rem);
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-cyan) !important;
+  border-radius: 0 !important;
+  box-shadow: 6px 6px 0px #002244 !important;
+  margin-bottom: 2.5rem;
 }
 
-/* 「AIの目」というメインテキスト */
 .main-title-text {
-    font-size: 4rem !important;
-    font-weight: 900 !important;
-    background: linear-gradient(45deg, #3a7bd5, #e6accc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 0 !important;
-    filter: drop-shadow(2px 4px 6px rgba(0, 0, 0, 0.1));
-    letter-spacing: 0.05em;
+  font-family: var(--font-pixel) !important;
+  font-size: clamp(1.4rem, 4.5vw, 3.5rem) !important;
+  font-weight: 400 !important;
+  color: var(--color-cyan) !important;
+  text-shadow: 4px 4px 0px #003355, 8px 8px 0px #001122 !important;
+  margin-bottom: 0 !important;
+  letter-spacing: 0.1em;
+  display: block !important;
+  -webkit-text-fill-color: var(--color-cyan) !important;
 }
 
-/* アイコンをぷるぷる動かすアニメーション */
 .title-icon {
-    display: inline-block;
-    animation: purupuru 2s infinite ease-in-out;
-    font-size: 4.5rem;
-    vertical-align: middle;
-    margin-right: 15px;
+  display: inline-block;
+  animation: purupuru 2s infinite ease-in-out;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  vertical-align: middle;
+  margin-right: 15px;
 }
 
 @keyframes purupuru {
-
-    0%,
-    100% {
-        transform: scale(1) rotate(0deg);
-    }
-
-    25% {
-        transform: scale(1.1) rotate(-5deg);
-    }
-
-    75% {
-        transform: scale(1.1) rotate(5deg);
-    }
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25%       { transform: scale(1.1) rotate(-5deg); }
+  75%       { transform: scale(1.1) rotate(5deg); }
 }
 
-/* サブテキスト（画像で学ぶAIの仕組み） */
 .sub-title-text {
-    font-size: 1.2rem !important;
-    color: #4a5568 !important;
-    letter-spacing: 0.3em !important;
-    text-transform: uppercase;
-    margin-top: -10px !important;
-    font-weight: bold;
+  font-size: clamp(0.7rem, 1.4vw, 0.9rem) !important;
+  color: var(--text-dim) !important;
+  letter-spacing: 0.25em !important;
+  margin-top: 6px !important;
+  font-family: var(--font-dot) !important;
+  display: block !important;
 }
 
 /* ============================================================
-   8. 実験室エリア装飾
+   12. DIVIDER — 区切り線
    ============================================================ */
-div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anchor-green) {
-    background-color: rgba(255, 255, 255, 0.4) !important;
-    border: 3px dashed #616cc3 !important;
-    border-radius: 25px !important;
-    width: 100% !important;
-    max-width: none !important;
-    padding: 40px !important;
-    margin-top: 2rem !important;
-    margin-bottom: 2rem !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05) !important;
+hr {
+  border: none !important;
+  height: 2px !important;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-cyan) 30%,
+    var(--color-pink) 70%,
+    transparent
+  ) !important;
+  width: 60% !important;
+  margin: 2rem auto !important;
+  opacity: 0.4 !important;
 }
 
-/* 目印そのものは表示しない */
-.lab-anchor-green {
-    display: none;
+/* ============================================================
+   13. LAB AREA — 実験エリア
+   ============================================================ */
+div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anchor-green) {
+  background: var(--bg-card) !important;
+  border: 2px dashed var(--border-cyan) !important;
+  border-radius: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: clamp(15px, 3vw, 40px) !important;
+  margin-top: 2rem !important;
+  margin-bottom: 2rem !important;
+  box-shadow: 6px 6px 0px #001133 !important;
+}
+
+.lab-anchor-green { display: none; }
+
+/* ============================================================
+   14. GALLERY ARROWS & ANIMATIONS
+   ============================================================ */
+@keyframes pulse-red {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.1); }
+}
+
+@keyframes bounce-down {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(12px); }
+}
+
+.row-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 185px;
+  height: 100%;
+  padding-top: 50%;
+  font-size: 65px;
+  color: var(--color-red);
+  font-weight: bold;
+  animation: pulse-red 2s infinite;
+}
+
+.show-arrow-svg {
+  display: inline-block;
+  animation: bounce-down 1.5s infinite, pulse-red 3s infinite;
+}
+
+.turn-arrow-container { animation: bounce-down 1.5s infinite; }
+
+/* ============================================================
+   15. LAYOUT — レイアウト補助
+   ============================================================ */
+[data-testid="stHorizontalBlock"] {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: flex-start;
+}
+
+[data-testid="column"] {
+  flex: 1 1 calc(50% - 1rem) !important;
+  min-width: 0 !important;
+}
+
+/* ============================================================
+   16. IMAGES — 画像
+   ============================================================ */
+[data-testid="stImage"],
+.img-frame img,
+.html-zoom-img {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+[data-testid="stImage"] img { max-width: 100% !important; height: auto !important; }
+
+img { max-width: 100%; height: auto; }
+
+/* ============================================================
+   17. HIGHLIGHT — テキストハイライト
+   ============================================================ */
+.highlight-text {
+  background: linear-gradient(transparent 65%, rgba(0, 212, 255, 0.25) 65%);
+  font-weight: bold;
+  color: var(--color-cyan) !important;
+}
+
+/* ============================================================
+   18. FOOTER — フッター
+   ============================================================ */
+.custom-footer,
+.full-width-footer {
+  width: 100vw !important;
+  position: relative !important;
+  left: 50% !important;
+  margin-left: -50vw !important;
+  background: var(--bg-base) !important;
+  color: var(--text-dim) !important;
+  text-align: center !important;
+  padding: 40px 20px 30px 20px !important;
+  border-top: 2px solid var(--border-cyan) !important;
+  margin-top: 80px !important;
+  box-shadow: 0 -4px 0px #003355 !important;
+}
+
+.custom-footer a,
+.full-width-footer a {
+  color: var(--color-cyan) !important;
+  text-decoration: none !important;
+  font-family: var(--font-dot) !important;
+  transition: color 0.2s ease !important;
+}
+
+.custom-footer a:hover,
+.full-width-footer a:hover {
+  color: var(--color-pink) !important;
+}
+
+.custom-footer p,
+.full-width-footer p {
+  color: var(--text-dim) !important;
+  font-family: var(--font-dot) !important;
+}
+
+/* ============================================================
+   19. RESPONSIVE DESIGN — レスポンシブ
+   ============================================================ */
+
+/* ---- 大型デスクトップ (1440px+) ---- */
+@media (min-width: 1440px) {
+  section.main .block-container {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+  }
+}
+
+/* ---- タブレット横向き / 大型ラップトップ (768px ~ 1200px) ---- */
+@media (max-width: 1200px) {
+  .main-title-text {
+    font-size: clamp(1.2rem, 3.5vw, 2.5rem) !important;
+  }
+
+  section.main .block-container {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+/* ---- タブレット (max 768px) ---- */
+@media (max-width: 768px) {
+  section.main .block-container {
+    max-width: 100vw !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    overflow-x: hidden !important;
+  }
+
+  .stApp h1 { font-size: clamp(0.8rem, 2.5vw, 1.1rem) !important; }
+  .stApp h2 { font-size: clamp(0.75rem, 2vw, 1rem) !important; }
+
+  .stMarkdown, p, span, label {
+    font-size: 0.92rem !important;
+  }
+
+  div[data-testid="stMetricValue"] {
+    font-size: 1.4rem !important;
+  }
+
+  div[data-testid="stVerticalBlock"] > div {
+    width: 100% !important;
+  }
+
+  [data-testid="stTable"] {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+
+  div.stButton > button {
+    min-height: 48px !important;
+  }
+
+  .main-title-text {
+    font-size: clamp(0.95rem, 3vw, 1.8rem) !important;
+  }
+
+  .main-title-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .title-icon {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .feature-card {
+    padding: 16px !important;
+  }
+
+  .explanation-box {
+    padding: 16px 18px !important;
+  }
+
+  .row-arrow {
+    margin-top: 100px;
+    font-size: 40px;
+  }
+}
+
+/* ---- スマートフォン (max 480px) ---- */
+@media (max-width: 480px) {
+  .stMarkdown, p, span, label {
+    font-size: 0.87rem !important;
+  }
+
+  .stApp h1 {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.03em !important;
+  }
+
+  .stApp h2 {
+    font-size: 0.72rem !important;
+    padding: 8px 12px !important;
+  }
+
+  .main-title-text {
+    font-size: 0.85rem !important;
+  }
+
+  .sub-title-text {
+    letter-spacing: 0.1em !important;
+  }
+
+  div.stButton > button {
+    min-height: 44px !important;
+  }
+
+  div.stButton > button p {
+    font-size: 0.78rem !important;
+  }
+
+  .step-badge {
+    font-size: 0.55rem !important;
+  }
 }
