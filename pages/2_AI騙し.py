@@ -462,6 +462,81 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
 
+    st.header("🔬 AIの弱点を実際に体験してみよう！")
+    with st.container():
+        st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)
+
+        if target_image is None:
+            st.info("⬆️ STEP 1 で画像を選択すると、AIの弱点をインタラクティブに体験できます！")
+        else:
+            img_arr_weak = np.array(target_image.resize((400, 400)))
+
+            experiment = st.radio(
+                "🔬 試してみる弱点を選択：",
+                ["🌪️ ノイズ耐性", "🔄 回転耐性", "🌗 コントラスト依存"],
+                horizontal=True,
+                key="weakness_exp"
+            )
+
+            test_img = img_arr_weak.copy()
+
+            if "🌪️" in experiment:
+                noise_level = st.slider("ノイズ強度（大きいほど荒くなる）", 0, 128, 20, key="noise_slider_w")
+                if noise_level > 0:
+                    noise    = np.random.normal(0, noise_level, img_arr_weak.shape)
+                    test_img = np.clip(img_arr_weak.astype(np.float32) + noise, 0, 255).astype(np.uint8)
+                st.caption("💡 高周波ノイズはCNNの特徴抽出を破壊します。")
+
+            elif "🔄" in experiment:
+                angle = st.slider("回転角度（度）", 0, 180, 45, key="rotate_slider_w")
+                if angle > 0:
+                    h, w     = img_arr_weak.shape[:2]
+                    M        = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1)
+                    test_img = cv2.warpAffine(img_arr_weak, M, (w, h))
+                st.caption("💡 多くのCNNは回転不変性を完全には持ちません。")
+
+            else:
+                contrast = st.slider("コントラスト倍率", 0.1, 2.0, 0.3, step=0.05, key="contrast_slider_w")
+                test_img = cv2.convertScaleAbs(img_arr_weak, alpha=contrast, beta=0)
+                st.caption("💡 低コントラストはエッジ情報を弱め、AIを迷わせます。")
+
+            col_orig_w, col_test_w = st.columns(2)
+
+            with col_orig_w:
+                st.markdown("""
+                <div class="img-frame">
+                    <span class="step-badge">ORIGINAL</span>
+                    <div class="caption-text">元の画像</div>
+                </div>""", unsafe_allow_html=True)
+                st.image(img_arr_weak, use_container_width=True)
+                if TORCH_AVAILABLE:
+                    orig_lbl_w, orig_pct_w = predict_image(img_arr_weak)[:2]
+                    st.metric("AIの判定", orig_lbl_w[:24] if len(orig_lbl_w) <= 24 else orig_lbl_w[:21] + "…")
+                    st.metric("確信度",   f"{orig_pct_w:.1f}%")
+
+            with col_test_w:
+                st.markdown("""
+                <div class="img-frame frame-phase2">
+                    <span class="step-badge">MODIFIED</span>
+                    <div class="caption-text">変化後の画像</div>
+                </div>""", unsafe_allow_html=True)
+                st.image(test_img, use_container_width=True)
+                if TORCH_AVAILABLE:
+                    test_lbl_w, test_pct_w = predict_image(test_img)[:2]
+                    delta_w = test_pct_w - orig_pct_w
+                    st.metric("AIの判定", test_lbl_w[:24] if len(test_lbl_w) <= 24 else test_lbl_w[:21] + "…")
+                    st.metric("確信度",   f"{test_pct_w:.1f}%", f"{delta_w:+.1f}%")
+
+            if TORCH_AVAILABLE:
+                if orig_lbl_w != test_lbl_w:
+                    st.error(f"⚠️ AIが「{orig_lbl_w}」→「{test_lbl_w}」へ誤認識しました！")
+                elif abs(orig_pct_w - test_pct_w) > 10:
+                    st.warning(f"⚠️ AIの確信度が{abs(orig_pct_w - test_pct_w):.1f}%も変化しました！")
+                else:
+                    st.success("✅ AIはまだ正確に認識しています。スライダーを動かして攻撃を強めてみよう！")
+            else:
+                st.info("💡 ② 騙しシミュレーター タブでAIへの実際の影響を体験できます！")
+
 # ---------------------------------------------------------------
 # TAB 2: 騙しシミュレーター
 # ---------------------------------------------------------------
