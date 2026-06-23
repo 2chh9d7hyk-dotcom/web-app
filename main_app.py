@@ -77,7 +77,8 @@ with st.sidebar:
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("### 🧭 Navigation")
     st.page_link("main_app.py", label="司令室 (Home)", icon="🏠")
-    st.page_link("pages/1_AIの目.py", label="ミッション01: AIの目", icon="👁️")
+    st.page_link("pages/1_AIの目.py",  label="ミッション01: AIの目",  icon="👁️")
+    st.page_link("pages/2_AI騙し.py", label="ミッション02: AI騙し", icon="🎭")
     st.success("🛡️ SHIELD: ONLINE")
     # システム時刻の秒まで動的に表示（再読み込みのたびに更新）
     st.caption(f"Last Ping: {datetime.now().strftime('%H:%M:%S')}")
@@ -136,21 +137,21 @@ with c1:
         
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- ミッション2：ロック中 ---
+# --- ミッション2：解放済み ---
 with c2:
     st.markdown("""
-    <div class="feature-card locked-card">
+    <div class="feature-card">
         <h3>🎭 ミッション02: AI騙し</h3>
-        <p>人間の目には見えない微小なノイズ。AIの脆弱性の仕組みを暴く。（現在ロック中）</p>
+        <p>人間の目には見えない微小なノイズ。AIの脆弱性の仕組みを暴き、対抗的サンプルを体験せよ。</p>
         <div class="math-badge">f(x + ε) ≠ y</div>
     </div>
     """, unsafe_allow_html=True)
     with st.container():
         st.markdown('<div class="invisible-button">', unsafe_allow_html=True)
-        if st.button("🔒 アクセス権限不足", disabled=True, use_container_width=True, key="lock1"):
+        if st.button("🎭 AI騙しを体験するにはここをクリック！", use_container_width=True, key="btn_mission_2"):
             st.switch_page("pages/2_AI騙し.py")
         st.markdown('</div>', unsafe_allow_html=True)
-        
+
     st.markdown('</div>', unsafe_allow_html=True)
 # --- ミッション3：ロック中 ---
 with c3:
