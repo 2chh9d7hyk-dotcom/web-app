@@ -870,18 +870,34 @@ div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anc
   height: auto !important;
 }
 
+/* コンテンツ写真（サンプル画像など）: 小さめ */
 [data-testid="stImage"] img {
   max-width: 100% !important;
-  max-height: 400px !important;
+  max-height: 200px !important;
+  width: auto !important;
   height: auto !important;
-  object-fit: contain !important;
+}
+
+/* シミュレーション/matplotlib グラフ: 大きめ
+   .sim-chart-marker スパンの直後にある stImage を対象 */
+[data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
+[data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"] img,
+div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] img {
+  max-height: 430px !important;
+  width: auto !important;
+  height: auto !important;
 }
 
 img { max-width: 100%; height: auto; }
 
 @media (max-width: 768px) {
   [data-testid="stImage"] img {
-    max-height: 300px !important;
+    max-height: 160px !important;
+  }
+  [data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
+  [data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"] img,
+  div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] img {
+    max-height: 280px !important;
   }
 }
 

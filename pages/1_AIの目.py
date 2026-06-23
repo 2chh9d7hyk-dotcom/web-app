@@ -206,7 +206,7 @@ else:
     image = create_dummy_image("No Image", (100, 100, 100))
 
 with col_preview:
-    st.image(image, caption="選択中の画像", use_container_width=True)
+    st.image(image, caption="選択中の画像", width=220)
     st.caption(f"サイズ: {image.width}×{image.height}px")
 
 # ================================================================

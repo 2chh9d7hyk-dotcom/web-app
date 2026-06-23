@@ -640,11 +640,13 @@ with tab2:
             with chart_col_l:
                 st.markdown("**元画像に対する判定 Top-5**")
                 fig = draw_confidence_bar(orig_top5, orig_label, "#00d4ff")
+                st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
                 st.pyplot(fig)
                 plt.close(fig)
             with chart_col_r:
                 st.markdown("**攻撃後の画像に対する判定 Top-5**")
                 fig = draw_confidence_bar(pert_top5, orig_label, "#ff4555")
+                st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
                 st.pyplot(fig)
                 plt.close(fig)
 

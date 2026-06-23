@@ -408,6 +408,7 @@ with tab1:
 
     with n_col3:
         fig_act, _ = plot_activation_curve(z_val, act_fn)
+        st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
         st.pyplot(fig_act)
         plt.close(fig_act)
 
@@ -521,10 +522,12 @@ with tab2:
         res_c1, res_c2 = st.columns([3, 2])
         with res_c1:
             fig_lc = plot_loss_acc(result["losses"], result["accuracies"])
+            st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
             st.pyplot(fig_lc)
             plt.close(fig_lc)
         with res_c2:
             fig_db = plot_decision_boundary(result["X"], result["y"], result["w"], result["b"], result["dataset_name"])
+            st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
             st.pyplot(fig_db)
             plt.close(fig_db)
 
@@ -613,6 +616,7 @@ with tab3:
     )
 
     fig_nn = plot_nn_diagram(layer_sizes)
+    st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
     st.pyplot(fig_nn)
     plt.close(fig_nn)
 
@@ -754,6 +758,7 @@ with tab4:
             """, unsafe_allow_html=True)
 
         fig_ov, train_mse, test_mse = plot_overfitting(poly_degree, noise_level)
+        st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
         st.pyplot(fig_ov)
         plt.close(fig_ov)
 
