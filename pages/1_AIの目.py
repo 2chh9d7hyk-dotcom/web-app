@@ -116,6 +116,20 @@ def predict_image(img_array: np.ndarray) -> tuple:
 load_css(CSS_FILE)
 
 st.markdown("""
+<nav class="top-nav">
+  <span class="nav-brand">🧠 AI LAB</span>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+  <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
+  <div class="nav-links">
+    <a href="/" class="nav-link">🏠 Home</a>
+    <a href="/AIの目" class="nav-link nav-active">👁️ M01: AIの目</a>
+    <a href="/AI騙し" class="nav-link">🎭 M02: AI騙し</a>
+    <a href="/AI育成" class="nav-link">🧬 M03: AI育成</a>
+  </div>
+</nav>
+""", unsafe_allow_html=True)
+
+st.markdown("""
 <div class="main-title-container">
     <h1 class="main-title-text">👁️ AIの目</h1>
     <p class="sub-title-text">MISSION 01 — AIは画像をどうやって「見て」いるのか？</p>

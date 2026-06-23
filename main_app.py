@@ -34,6 +34,23 @@ def load_css(file_name):
 load_css("style.css")
 
 # =====================================
+# 2b. トップナビゲーション
+# =====================================
+st.markdown("""
+<nav class="top-nav">
+  <span class="nav-brand">🧠 AI LAB</span>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+  <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
+  <div class="nav-links">
+    <a href="/" class="nav-link nav-active">🏠 Home</a>
+    <a href="/AIの目" class="nav-link">👁️ M01: AIの目</a>
+    <a href="/AI騙し" class="nav-link">🎭 M02: AI騙し</a>
+    <a href="/AI育成" class="nav-link">🧬 M03: AI育成</a>
+  </div>
+</nav>
+""", unsafe_allow_html=True)
+
+# =====================================
 # 3. セキュリティバイデザイン・アーマー
 # =====================================
 # URLパラメータの監視
@@ -74,7 +91,6 @@ with st.sidebar:
             <span style="color: #3b82f6; font-weight: bold;">{user_hash}</span>
         </div>
     """, unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
     st.markdown("### 🧭 Navigation")
     st.page_link("main_app.py", label="司令室 (Home)", icon="🏠")
     st.page_link("pages/1_AIの目.py",  label="ミッション01: AIの目",  icon="👁️")
@@ -115,7 +131,6 @@ with col3:
             <p>ブラックボックスの正体を知ることで、AIを恐れるのではなく、使いこなすための「知の武器」を手に入れます。</p>
         </div>
     """, unsafe_allow_html=True)
-st.markdown("<br>", unsafe_allow_html=True)
 # =====================================
 # 6. ミッションボード（実験コンテンツ）
 # =====================================

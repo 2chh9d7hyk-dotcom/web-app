@@ -230,6 +230,20 @@ def draw_confidence_bar(top5: list, highlight_label: str, bar_color: str) -> plt
 load_css(CSS_FILE)
 
 st.markdown("""
+<nav class="top-nav">
+  <span class="nav-brand">🧠 AI LAB</span>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+  <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
+  <div class="nav-links">
+    <a href="/" class="nav-link">🏠 Home</a>
+    <a href="/AIの目" class="nav-link">👁️ M01: AIの目</a>
+    <a href="/AI騙し" class="nav-link nav-active">🎭 M02: AI騙し</a>
+    <a href="/AI育成" class="nav-link">🧬 M03: AI育成</a>
+  </div>
+</nav>
+""", unsafe_allow_html=True)
+
+st.markdown("""
 <div class="main-title-container">
     <h1 class="main-title-text">🎭 AI騙し</h1>
     <p class="sub-title-text">MISSION 02 — 微小な「嘘」でAIの認識を崩壊させろ</p>

@@ -252,6 +252,20 @@ def plot_nn_diagram(layer_sizes):
 load_css(CSS_FILE)
 
 st.markdown("""
+<nav class="top-nav">
+  <span class="nav-brand">🧠 AI LAB</span>
+  <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
+  <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
+  <div class="nav-links">
+    <a href="/" class="nav-link">🏠 Home</a>
+    <a href="/AIの目" class="nav-link">👁️ M01: AIの目</a>
+    <a href="/AI騙し" class="nav-link">🎭 M02: AI騙し</a>
+    <a href="/AI育成" class="nav-link nav-active">🧬 M03: AI育成</a>
+  </div>
+</nav>
+""", unsafe_allow_html=True)
+
+st.markdown("""
 <div class="main-title-container">
     <h1 class="main-title-text">🧬 AI育成</h1>
     <p class="sub-title-text">MISSION 03 — AIを生み出し、鍛え、成長を見守る体験</p>
@@ -275,8 +289,6 @@ with st.sidebar:
         <span style="color:#ffd700; font-weight:bold; font-size:0.9rem;">🧬 TRAINING MODE</span>
     </div>
     """, unsafe_allow_html=True)
-    st.markdown("<br>", unsafe_allow_html=True)
-
     st.markdown("### ⚡ 学習パラメータ")
     lr_sidebar     = st.slider("学習率 (η)", 0.001, 1.0, 0.1, 0.005, format="%.3f", key="lr_sidebar")
     epochs_sidebar = st.slider("エポック数",  10,   500, 100, 10,               key="ep_sidebar")
@@ -475,7 +487,6 @@ with tab2:
     with cfg_c3:
         act_ch2 = st.selectbox("活性化関数", list(ACTIVATION_FUNS.keys()), key="act_tab2")
         act_fn2 = ACTIVATION_FUNS[act_ch2]
-        st.markdown("<br>", unsafe_allow_html=True)
         if st.button("🚀 学習スタート！", use_container_width=True, key="train_btn"):
             X_tr, y_tr = generate_dataset(dataset_key, n_samples)
             w_f, b_f, losses, accs = train_perceptron(X_tr, y_tr, lr_t2, epochs_t2, act_fn2)
