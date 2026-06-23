@@ -130,9 +130,9 @@ def plot_activation_curve(z_val: float, fn_name: str):
     ax.scatter([z_val], [out], color="#ffd700", s=120, zorder=5)
     ax.vlines(z_val, min(y.min(), out) - 0.05, out, color="#ffd700", ls=":", alpha=0.7)
     ax.hlines(out, -6, z_val, color="#ffd700", ls=":", alpha=0.7)
-    ax.set_xlabel("z（加重和）", color="#e6edf3", fontsize=9)
-    ax.set_ylabel("出力", color="#e6edf3", fontsize=9)
-    ax.set_title(f"活性化関数：{fn_name}", color="#e6edf3", fontsize=10)
+    ax.set_xlabel("z (weighted sum)", color="#e6edf3", fontsize=9)
+    ax.set_ylabel("Output", color="#e6edf3", fontsize=9)
+    ax.set_title(f"Activation: {fn_name}", color="#e6edf3", fontsize=10)
     ax.legend(labelcolor="#e6edf3", facecolor="#1e2a3a", edgecolor="#3d5a8a", fontsize=8)
     ax.grid(True, alpha=0.15, color="#3d5a8a")
     plt.tight_layout(pad=0.5)
@@ -149,15 +149,15 @@ def plot_loss_acc(losses, accuracies):
         ax.grid(True, alpha=0.15, color="#3d5a8a")
     ep = np.arange(1, len(losses) + 1)
     ax1.plot(ep, losses, color="#ff71ce", lw=2)
-    ax1.set_title("損失 (Loss)", color="#e6edf3")
+    ax1.set_title("Loss", color="#e6edf3")
     ax1.set_xlabel("Epoch", color="#e6edf3")
     ax1.set_ylabel("Loss", color="#e6edf3")
     ax2.plot(ep, accuracies, color="#05ffa1", lw=2)
     ax2.set_ylim(0, 105)
-    ax2.set_title("精度 (Accuracy)", color="#e6edf3")
+    ax2.set_title("Accuracy", color="#e6edf3")
     ax2.set_xlabel("Epoch", color="#e6edf3")
     ax2.set_ylabel("Accuracy (%)", color="#e6edf3")
-    plt.suptitle("学習曲線", color="#ffd700", fontsize=13, fontweight="bold")
+    plt.suptitle("Learning Curves", color="#ffd700", fontsize=13, fontweight="bold")
     plt.tight_layout()
     return fig
 
@@ -174,10 +174,10 @@ def plot_decision_boundary(X, y, w, b, dataset_name):
     z_grid = sigmoid(np.c_[xx.ravel(), yy.ravel()] @ w + b).reshape(xx.shape)
     ax.contourf(xx, yy, z_grid, levels=50, cmap="RdYlGn", alpha=0.3)
     ax.contour(xx, yy, z_grid, levels=[0.5], colors="#ffd700", linewidths=2)
-    ax.scatter(X[y==1, 0], X[y==1, 1], c="#05ffa1", s=30, label="クラス1", edgecolors="white", lw=0.4, zorder=3)
-    ax.scatter(X[y==0, 0], X[y==0, 1], c="#ff71ce", s=30, label="クラス0", edgecolors="white", lw=0.4, zorder=3)
+    ax.scatter(X[y==1, 0], X[y==1, 1], c="#05ffa1", s=30, label="Class 1", edgecolors="white", lw=0.4, zorder=3)
+    ax.scatter(X[y==0, 0], X[y==0, 1], c="#ff71ce", s=30, label="Class 0", edgecolors="white", lw=0.4, zorder=3)
     ax.legend(labelcolor="#e6edf3", facecolor="#1e2a3a", edgecolor="#3d5a8a", fontsize=8)
-    ax.set_title(f"{dataset_name} の分類境界", color="#e6edf3", fontsize=10)
+    ax.set_title("Decision Boundary", color="#e6edf3", fontsize=10)
     plt.tight_layout(pad=0.5)
     return fig
 
@@ -204,14 +204,14 @@ def plot_overfitting(degree, noise, seed=7):
     for sp in ax.spines.values():
         sp.set_color("#3d5a8a")
     ax.tick_params(colors="#e6edf3")
-    ax.scatter(x_tr, y_tr, c="#05ffa1", s=60, zorder=5, label="訓練データ", edgecolors="white", lw=0.5)
-    ax.plot(x_te, y_true, color="#00d4ff", lw=2, ls="--", label="真の関数（正解）")
-    ax.plot(x_te, y_fit,  color="#ff71ce", lw=2, label=f"モデル（次数{degree}）")
+    ax.scatter(x_tr, y_tr, c="#05ffa1", s=60, zorder=5, label="Training data", edgecolors="white", lw=0.5)
+    ax.plot(x_te, y_true, color="#00d4ff", lw=2, ls="--", label="True function")
+    ax.plot(x_te, y_fit,  color="#ff71ce", lw=2, label=f"Model (deg {degree})")
     ax.set_ylim(-4, 4)
     ax.set_xlim(-1.5, 1.5)
     ax.grid(True, alpha=0.15, color="#3d5a8a")
     ax.legend(labelcolor="#e6edf3", facecolor="#1e2a3a", edgecolor="#3d5a8a", fontsize=8)
-    ax.set_title(f"多項式フィット（次数 {degree}）", color="#e6edf3", fontsize=11)
+    ax.set_title(f"Polynomial Fit (degree {degree})", color="#e6edf3", fontsize=11)
     plt.tight_layout()
     return fig, train_mse, test_mse
 
@@ -239,10 +239,10 @@ def plot_nn_diagram(layer_sizes):
         for nx, ny in all_pos[li]:
             circle = plt.Circle((nx, ny), 0.022, color=col, ec="white", lw=0.8, zorder=3)
             ax.add_patch(circle)
-        lbl = "入力層" if li == 0 else ("出力層" if li == n_layers - 1 else f"隠れ層{li}")
+        lbl = "Input" if li == 0 else ("Output" if li == n_layers - 1 else f"Hidden {li}")
         ax.text(x, 0.07, lbl,        ha="center", color=col,       fontsize=8, fontweight="bold")
         ax.text(x, 0.02, f"({n})",   ha="center", color="#8b9ab0", fontsize=7)
-    ax.set_title("ネットワーク構造", color="#ffd700", fontsize=13, pad=5)
+    ax.set_title("Network Architecture", color="#ffd700", fontsize=13, pad=5)
     plt.tight_layout()
     return fig
 
@@ -341,6 +341,15 @@ with tab1:
                 <li>「バイアス（b）」を加える → これが <b>加重和 z</b></li>
                 <li>「活性化関数」で 0〜1 の信号に変換する → これが <b>出力</b></li>
             </ol>
+            <hr style="border-color:#3d5a8a; margin:10px 0;">
+            <b style="color:#ffd700;">📦 何に役立つ？</b><br>
+            ニューロンは、スパムメールの自動判定・スマートフォンの顔認証・医療用のがん診断画像判定など、
+            <b>あらゆるAIアプリケーションの基礎部品</b>です。
+            ニューロンが集まることで、複雑な判断を行う知性が生まれます。<br><br>
+            <b style="color:#05ffa1;">✅ どうなっていると良い？</b><br>
+            「重要な入力に大きな重み（w）・関係ない入力に小さな重み（w ≈ 0）」と
+            適切に調整されている状態が理想です。
+            学習前はランダムな値ですが、訓練を重ねるほど重みが最適化されていきます。<br><br>
             下のスライダーを動かして、ニューロンが「発火」する瞬間を体感しよう！
             </div>
             """, unsafe_allow_html=True)
@@ -439,6 +448,14 @@ with tab2:
         AIが学習するプロセスは、3つのステップの繰り返しです：<br>
         <b>① 予測（Forward Pass）→ ② 誤差計算（Loss）→ ③ 重みの更新（Backward Pass）</b><br>
         これを何度もくり返すことで、AIは徐々に賢くなります。
+        <hr style="border-color:#3d5a8a; margin:10px 0;">
+        <b style="color:#ffd700;">📦 何に役立つ？</b><br>
+        この「予測 → 誤差計算 → 修正」という3ステップは、
+        医療診断・商品レコメンド・機械翻訳・迷惑メール検出など、
+        <b>世の中のほぼすべての機械学習の根幹</b>となっています。ChatGPT も同じ仕組みで訓練されました。<br><br>
+        <b style="color:#05ffa1;">✅ どうなっていると良い？</b><br>
+        「Loss（誤差）グラフが滑らかに右下がり」になり、同時に「Accuracy（精度）が右上がり」になっている状態が理想です。
+        グラフがギザギザと乱高下している場合は学習率が大きすぎるサインです。
         </div>
         """, unsafe_allow_html=True)
 
@@ -547,10 +564,19 @@ with tab3:
         st.markdown("""
         <div class="explanation-box">
         <h3>🏗️ 「深さ」が生み出す表現力</h3>
-        単一ニューロンでは直線でしか分類できません（TAB 2 の XOR でそれを体験しましたね）。<br>
+        単一ニューロンでは直線でしか分類できません（② のタブの XOR でそれを体験しましたね）。<br>
         ニューロンを複数の「層（レイヤー）」に積み重ねることで、
         AI は非常に複雑なパターンを学習できるようになります。<br>
         これが「<b>Deep Learning（深層学習）</b>」と呼ばれる理由です。
+        <hr style="border-color:#3d5a8a; margin:10px 0;">
+        <b style="color:#ffd700;">📦 何に役立つ？</b><br>
+        深層学習は現代AIの中核技術です。
+        <b>ChatGPT</b>（文章生成）・<b>Stable Diffusion</b>（画像生成）・<b>AlphaFold</b>（タンパク質構造予測）・
+        <b>自動運転</b>・<b>リアルタイム通訳</b>など、2020年代のAI革命はすべて深層学習が土台になっています。<br><br>
+        <b style="color:#05ffa1;">✅ どうなっていると良い？</b><br>
+        各層が「異なる抽象レベル」の特徴を担当しているのが理想的な状態です。
+        例えば画像認識では：浅い層→エッジや色 / 中間層→目・鼻・テクスチャ / 深い層→「これは犬だ」という概念。
+        また、<b>訓練精度とテスト精度がどちらも高く、その差が小さい</b>（過学習していない）状態が健全です。
         </div>
         """, unsafe_allow_html=True)
 
@@ -669,6 +695,15 @@ with tab4:
             <li>訓練データの精度：超高い（≒ 100%）</li>
             <li>テストデータの精度：低い（汎化できていない）</li>
             </ul>
+            <hr style="border-color:#3d5a8a; margin:10px 0;">
+            <b style="color:#ffd700;">📦 何に役立つ？（なぜ学ぶのか？）</b><br>
+            「過学習」を知っているエンジニアは、AIをリリースする前に必ずテストデータで検証し、問題を未然に防げます。
+            現実では、訓練データだけで99%を出せても、本番環境（初めて見るデータ）では50%しか出ないAIが量産されています。
+            過学習を理解することは、<b>実用的なAIを作る最重要スキル</b>の一つです。<br><br>
+            <b style="color:#05ffa1;">✅ どうなっていると良い？</b><br>
+            <b>訓練 MSE とテスト MSE の比率（過学習スコア）が 1.0〜1.5 程度</b>であれば健全な状態です。
+            比率が 2 を超えたら要注意、5 を超えたら重篤な過学習です。
+            右のシミュレーターで次数を上げながら比率の変化を観察してみましょう。
             </div>
             """, unsafe_allow_html=True)
 
@@ -759,22 +794,75 @@ with tab4:
     with st.container():
         st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)
 
-        summary_cards = [
-            ("🧠", "ニューロン",    "AI の最小単位。重み × 入力の合計を活性化関数に通して発火/静止を決める",              "#00d4ff"),
-            ("📉", "勾配降下法",   "損失関数の坂を下る方向に重みを少しずつ修正する最適化アルゴリズム",                    "#05ffa1"),
-            ("🕸️", "深層学習",     "多くの層を重ねることで非線形な複雑パターンを学習できるようになる",                    "#ffd700"),
-            ("⚠️", "過学習",       "訓練データへの過剰適合。防ぐには正則化・ドロップアウト・データ拡張などが有効",         "#ff71ce"),
-        ]
         summ_cols = st.columns(4)
-        for col, (icon, title, desc, color) in zip(summ_cols, summary_cards):
-            col.markdown(f"""
-            <div style="background:#1e2a3a; border:2px solid {color}; border-left:6px solid {color};
-                        padding:14px; min-height:160px;">
-                <div style="font-size:1.8rem; text-align:center;">{icon}</div>
-                <div style="color:{color}; font-weight:bold; text-align:center; margin:6px 0;">{title}</div>
-                <div style="color:#e6edf3; font-size:0.82rem; line-height:1.6;">{desc}</div>
+        summ_cols[0].markdown("""
+        <div style="background:#1e2a3a; border:2px solid #00d4ff; border-left:6px solid #00d4ff; padding:14px;">
+            <div style="font-size:1.8rem; text-align:center;">🧠</div>
+            <div style="color:#00d4ff; font-weight:bold; text-align:center; margin:6px 0;">ニューロン</div>
+            <div style="color:#e6edf3; font-size:0.82rem; line-height:1.6;">
+                AIの最小単位。重み×入力の合計を活性化関数に通して発火/静止を決める。
             </div>
-            """, unsafe_allow_html=True)
+            <div style="color:#ffd700; font-size:0.78rem; margin-top:10px; font-weight:bold;">📦 役立つ場面</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                顔認証・スパム検出・医療診断など、すべてのAI技術の基礎部品。ニューロンが何億個も集まりChatGPTになる。
+            </div>
+            <div style="color:#05ffa1; font-size:0.78rem; margin-top:8px; font-weight:bold;">✅ 良い状態とは？</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                重要な入力に大きな重み、関係ない入力に重み≈0が割り当てられている状態。
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        summ_cols[1].markdown("""
+        <div style="background:#1e2a3a; border:2px solid #05ffa1; border-left:6px solid #05ffa1; padding:14px;">
+            <div style="font-size:1.8rem; text-align:center;">📉</div>
+            <div style="color:#05ffa1; font-weight:bold; text-align:center; margin:6px 0;">勾配降下法</div>
+            <div style="color:#e6edf3; font-size:0.82rem; line-height:1.6;">
+                損失関数の坂を下る方向に重みを少しずつ修正する最適化アルゴリズム。
+            </div>
+            <div style="color:#ffd700; font-size:0.78rem; margin-top:10px; font-weight:bold;">📦 役立つ場面</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                ChatGPTから自動運転まで、あらゆる機械学習モデルの「学習」そのものを担う仕組み。これなしにAIは育たない。
+            </div>
+            <div style="color:#05ffa1; font-size:0.78rem; margin-top:8px; font-weight:bold;">✅ 良い状態とは？</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                Lossグラフが滑らかに右下がり。ギザギザ→学習率が大きすぎ、平坦→小さすぎ。
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        summ_cols[2].markdown("""
+        <div style="background:#1e2a3a; border:2px solid #ffd700; border-left:6px solid #ffd700; padding:14px;">
+            <div style="font-size:1.8rem; text-align:center;">🕸️</div>
+            <div style="color:#ffd700; font-weight:bold; text-align:center; margin:6px 0;">深層学習</div>
+            <div style="color:#e6edf3; font-size:0.82rem; line-height:1.6;">
+                多くの層を重ねることで非線形な複雑パターンを学習できるようになる。
+            </div>
+            <div style="color:#ffd700; font-size:0.78rem; margin-top:10px; font-weight:bold;">📦 役立つ場面</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                ChatGPT・画像生成・自動翻訳・AlphaFold（創薬）など、2020年代のAI革命すべての土台。
+            </div>
+            <div style="color:#05ffa1; font-size:0.78rem; margin-top:8px; font-weight:bold;">✅ 良い状態とは？</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                各層が異なる抽象度の特徴を担当し、訓練精度とテスト精度の両方が高い状態。
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        summ_cols[3].markdown("""
+        <div style="background:#1e2a3a; border:2px solid #ff71ce; border-left:6px solid #ff71ce; padding:14px;">
+            <div style="font-size:1.8rem; text-align:center;">⚠️</div>
+            <div style="color:#ff71ce; font-weight:bold; text-align:center; margin:6px 0;">過学習</div>
+            <div style="color:#e6edf3; font-size:0.82rem; line-height:1.6;">
+                訓練データへの過剰適合。防ぐには正則化・ドロップアウト・データ拡張などが有効。
+            </div>
+            <div style="color:#ffd700; font-size:0.78rem; margin-top:10px; font-weight:bold;">📦 役立つ場面</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                「過学習を知る」ことで本番リリース前に問題を発見できる。AIエンジニアの必須チェック項目。
+            </div>
+            <div style="color:#05ffa1; font-size:0.78rem; margin-top:8px; font-weight:bold;">✅ 良い状態とは？</div>
+            <div style="color:#8b9ab0; font-size:0.78rem; line-height:1.5;">
+                過学習スコア（テストMSE÷訓練MSE）が1.0〜1.5。5を超えると重篤な過学習。
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # ================================================================
 # SECTION 10: フッター
