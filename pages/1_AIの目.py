@@ -294,7 +294,7 @@ if image:
                 original, rgb_layer = st.columns([1,1])
                 with original:
                     st.markdown(f"▼ 元画像 ")
-                    st.image(image, caption="三色の組み合わせ画像", width=250)
+                    st.image(image, caption="三色の組み合わせ画像", use_container_width=True)
                 with rgb_layer:
                     st.markdown(f"▼ 成分画像")
                     target_vis_placeholder = st.empty()
@@ -335,7 +335,7 @@ if image:
                     target_vis = np.stack([zeros, zeros, b_ch], axis=2)
                     cmap_style = "Blues"
                 
-                target_vis_placeholder.image(target_vis, caption=f"明るい場所＝{channel}が強い", width=250)
+                target_vis_placeholder.image(target_vis, caption=f"明るい場所＝{channel}が強い", use_container_width=True)
 
                 # --- 6. 数値の取得とメトリック表示 ---
                 if len(img_array.shape) == 3:
@@ -367,8 +367,8 @@ if image:
 
             with col_zoom1:
                 c1, c2 = st.columns(2)
-                c1.image(zoom_disp_orig, caption="選択範囲(元)", width=250)
-                c2.image(zoom_disp, caption="選択範囲(成分)", width=250)
+                c1.image(zoom_disp_orig, caption="選択範囲(元)", use_container_width=True)
+                c2.image(zoom_disp, caption="選択範囲(成分)", use_container_width=True)
 
             with col_zoom2:
                 if zoom_area.ndim == 3:
@@ -450,11 +450,11 @@ if image:
             col_res1, col_res2, col_res3 = st.columns([1, 1, 1])
             
             with col_res1:
-                st.image(image, caption="1. 元画像", width=300)
+                st.image(image, caption="1. 元画像", use_container_width=True)
             with col_res2:
-                st.image(blurred, caption="2. ぼかし後", width=300)
+                st.image(blurred, caption="2. ぼかし後", use_container_width=True)
             with col_res3:
-                st.image(processed_edges, caption=f"3. {edge_mode} 結果", width=300)
+                st.image(processed_edges, caption=f"3. {edge_mode} 結果", use_container_width=True)
 
             # 教材メッセージ
             st.markdown(
@@ -504,7 +504,7 @@ if image:
         Lab_area = st.container()
         with Lab_area:
             st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)# UI layout consistency check
-            gallery_size = 350  # 画像サイズを350に固定（スライダー削除）
+            gallery_size = None  # use_container_width=True に統一
             if os.path.exists(r"C:\Python practice\Antigravity"):
                 path = r"C:\Python practice\Antigravity"
             else:
@@ -542,7 +542,7 @@ if image:
                         <span class="step-badge">{item['badge']}</span>
                         <div class="caption-text">{item['title']}</div>
                     </div>""", unsafe_allow_html=True)
-                    try: st.image(item["file"], width=gallery_size)
+                    try: st.image(item["file"], use_container_width=True)
                     except: st.error("画像なし")
 
                 # 矢印の配置 (画像と画像の間にのみ配置)
@@ -689,13 +689,13 @@ if image:
                         col_ans1, col_ans2,col_ans3 = st.columns(3)
                         with col_ans1:
                             st.markdown("**元画像**")
-                            st.image(ans_path, caption="処理前画像", width=300)
+                            st.image(ans_path, caption="処理前画像", use_container_width=True)
                         with col_ans2:
                             st.markdown("**🔍 重ね合わせ検証**")
-                            st.image(vis_img, caption="🔴エッジ検出 🟢正解領域（甘め） 🟡的中", width=300)
+                            st.image(vis_img, caption="🔴エッジ検出 🟢正解領域（甘め） 🟡的中", use_container_width=True)
                         with col_ans3:
                             st.markdown("**🎯 理論上の100%**")
-                            st.image(ideal_img, caption="理想的な重なり",width=300)
+                            st.image(ideal_img, caption="理想的な重なり", use_container_width=True)
                         st.warning("""参考：中央画像のエッジ的中率（黄色の重なりの割合）は「2.7%」でした。これにより、赤と緑の画像は同じではないと分かります。私たち人間にとっては同じに見えても、コンピュータにとってはこのような手順を踏む必要があります。""")
                         st.markdown("<br>" * 2, unsafe_allow_html=True)
                         st.markdown("""
@@ -833,7 +833,7 @@ if image:
             with c2:
                 sub_col_left, sub_col_right = st.columns([0.2, 1]) 
                 with sub_col_right:
-                    st.image(processed, caption=f"【変換後】{filter_type} の世界", width=400)
+                    st.image(processed, caption=f"【変換後】{filter_type} の世界", use_container_width=True)
             st.divider()
             st.warning("""
             🎓 **プロフェッショナルな豆知識：なぜ「左上」から？**
@@ -890,7 +890,7 @@ if image:
                 sub_col_left, sub_col_right = st.columns([0.2, 1]) 
                 with sub_col_right:
                     st.markdown("<br>" * 2, unsafe_allow_html=True)
-                    st.image(processed_custom, caption="あなたの実験結果", width=400)
+                    st.image(processed_custom, caption="あなたの実験結果", use_container_width=True)
 
                 
             st.success("""
@@ -902,21 +902,33 @@ if image:
             ・正と負の値を混ぜると「差分」を計算する形になり、隣接画素との変化量＝エッジ（輪郭）を強調できる。
             """)
     # --------------------------
-    # TAB 4: AI弱点ラボ - 強化完全版（信頼度追跡修正版）
+    # TAB 4: AI弱点ラボ（準備中）
     # --------------------------
     with tab4:
         st.header("🧠 AI弱点ラボ")
+        st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)
+        st.info("""
+        🚧 **このページは現在準備中です**
 
-        Lab_area = st.container()
-        with Lab_area:
+        AI（MobileNetV2）を使った画像認識の弱点を体験できるラボです。
+        - 🌪️ ノイズ耐性：画像にノイズを加えるとAIの確信度がどう変化するか
+        - 🔄 回転耐性：画像を回転させるとAIが誤認識するか
+        - 🌗 コントラスト依存：明暗を変えるとAIの判断がどう変わるか
 
-            st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)
+        近日公開予定！
+        """)
 
-            experiment = st.radio(
-                "🔬 実験する弱点を選択してください：",
-                ["🌪️ ノイズ耐性", "🔄 回転耐性", "🌗 コントラスト依存"],
-                horizontal=True
-            )
+        if False:  # 将来的にAI推論が利用可能になったら True に変更する
+            Lab_area = st.container()
+            with Lab_area:
+
+                st.markdown('<div class="lab-anchor-green"></div>', unsafe_allow_html=True)
+
+                experiment = st.radio(
+                    "🔬 実験する弱点を選択してください：",
+                    ["🌪️ ノイズ耐性", "🔄 回転耐性", "🌗 コントラスト依存"],
+                    horizontal=True
+                )
 
             base_label, base_conf = predict_image(img_array)
 
