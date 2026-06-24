@@ -73,6 +73,9 @@ canvas, img, [data-testid="stImage"] {
 }
 
 a:active { pointer-events: none !important; }
+/* page_link anchors must stay clickable */
+[data-testid="stPageLink"] a,
+[data-testid="stPageLink"] a:active { pointer-events: auto !important; }
 
 .no-copy {
   -webkit-user-select: none !important;
@@ -1204,4 +1207,65 @@ a.nav-link:focus {
   border-color: var(--border-dim) !important;
   border-left: 3px solid var(--color-cyan) !important;
   font-weight: bold;
+}
+
+/* ============================================================
+   21. TOP NAV — st.page_link ベース (ハンバーガー廃止・常時表示)
+   ============================================================ */
+.nav-brand-inline {
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--color-cyan);
+  text-shadow: 2px 2px 0 #003355;
+  margin: 0 !important;
+  padding: 6px 4px !important;
+  line-height: 2.2;
+  white-space: nowrap;
+}
+
+.nav-bottom-bar {
+  border-bottom: 2px solid var(--border-cyan);
+  margin: -4px 0 10px 0;
+  box-shadow: 0 3px 10px #001a2e;
+}
+
+/* メインエリアの page_link をナビリンク風にスタイル */
+[data-testid="stMain"] [data-testid="stPageLink"] a {
+  background: var(--bg-card) !important;
+  border: 2px solid var(--border-dim) !important;
+  border-left: 3px solid var(--border-dim) !important;
+  color: var(--text-dim) !important;
+  padding: 5px 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  font-family: var(--font-dot) !important;
+  font-size: 0.78rem !important;
+  box-shadow: 2px 2px 0 #000 !important;
+  transition: border-color 0.1s, background 0.1s, color 0.1s !important;
+  width: 100% !important;
+  min-height: 36px !important;
+}
+
+[data-testid="stMain"] [data-testid="stPageLink"] a:hover {
+  color: var(--color-cyan) !important;
+  border-color: var(--border-cyan) !important;
+  border-left-color: var(--color-cyan) !important;
+  background: var(--bg-elevated) !important;
+}
+
+/* Streamlit がカレントページを aria-current="page" で示す */
+[data-testid="stMain"] [data-testid="stPageLink"] a[aria-current="page"] {
+  color: var(--color-cyan) !important;
+  background: var(--bg-elevated) !important;
+  border-left: 3px solid var(--color-cyan) !important;
+  font-weight: bold !important;
+}
+
+/* page_link 内の p タグのマージンをリセット */
+[data-testid="stMain"] [data-testid="stPageLink"] a p {
+  margin: 0 !important;
+  font-size: 0.78rem !important;
+  color: inherit !important;
 }
