@@ -4,6 +4,7 @@ from datetime import datetime
 import hashlib
 import os
 import time
+from utils.nav import render_top_nav
 
 # =====================================
 # 1. ページ設定（※一番最初に記述必須！）
@@ -36,19 +37,7 @@ load_css("style.css")
 # =====================================
 # 2b. トップナビゲーション
 # =====================================
-st.markdown("""
-<nav class="top-nav">
-  <span class="nav-brand">🧠 AI LAB</span>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
-  <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
-  <div class="nav-links">
-    <a href="javascript:void(0)" onclick="window.location.href='/'" class="nav-link nav-active">🏠 Home</a>
-    <a href="javascript:void(0)" onclick="window.location.href='/AI%E3%81%AE%E7%9B%AE'" class="nav-link">👁️ M01: AIの目</a>
-    <a href="javascript:void(0)" onclick="window.location.href='/AI%E9%A8%99%E3%81%97'" class="nav-link">🎭 M02: AI騙し</a>
-    <a href="javascript:void(0)" onclick="window.location.href='/AI%E8%82%B2%E6%88%90'" class="nav-link">🧬 M03: AI育成</a>
-  </div>
-</nav>
-""", unsafe_allow_html=True)
+render_top_nav("home")
 
 # =====================================
 # 3. セキュリティバイデザイン・アーマー
@@ -92,10 +81,10 @@ with st.sidebar:
         </div>
     """, unsafe_allow_html=True)
     st.markdown("### 🧭 Navigation")
-    st.page_link("main_app.py", label="司令室 (Home)", icon="🏠")
-    st.page_link("pages/1_AIの目.py",  label="ミッション01: AIの目",  icon="👁️")
-    st.page_link("pages/2_AI騙し.py", label="ミッション02: AI騙し", icon="🎭")
-    st.page_link("pages/3_AI育成.py", label="ミッション03: AI育成", icon="🧬")
+    st.page_link("main_app.py",              label="司令室 (Home)",         icon="🏠")
+    st.page_link("pages/1_vision.py",        label="ミッション01: AIの目",  icon="👁️")
+    st.page_link("pages/2_adversarial.py",   label="ミッション02: AI騙し",  icon="🎭")
+    st.page_link("pages/3_training.py",      label="ミッション03: AI育成",  icon="🧬")
     st.success("🛡️ SHIELD: ONLINE")
     # システム時刻の秒まで動的に表示（再読み込みのたびに更新）
     st.caption(f"Last Ping: {datetime.now().strftime('%H:%M:%S')}")
@@ -148,7 +137,7 @@ with c1:
     with st.container():
         st.markdown('<div class="invisible-button">', unsafe_allow_html=True)
         if st.button("AIの目を体験するにはここをクリック！",use_container_width=True,key="btn_mission_1"):
-            st.switch_page("pages/1_AIの目.py")
+            st.switch_page("pages/1_vision.py")
         st.markdown('</div>', unsafe_allow_html=True)
         
     st.markdown('</div>', unsafe_allow_html=True)
@@ -165,7 +154,7 @@ with c2:
     with st.container():
         st.markdown('<div class="invisible-button">', unsafe_allow_html=True)
         if st.button("🎭 AI騙しを体験するにはここをクリック！", use_container_width=True, key="btn_mission_2"):
-            st.switch_page("pages/2_AI騙し.py")
+            st.switch_page("pages/2_adversarial.py")
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
@@ -181,7 +170,7 @@ with c3:
     with st.container():
         st.markdown('<div class="invisible-button">', unsafe_allow_html=True)
         if st.button("🧬 AI育成を体験するにはここをクリック！", use_container_width=True, key="btn_mission_3"):
-            st.switch_page("pages/3_AI育成.py")
+            st.switch_page("pages/3_training.py")
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)

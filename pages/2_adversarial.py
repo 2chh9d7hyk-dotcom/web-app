@@ -6,6 +6,7 @@ import os
 import base64
 import matplotlib
 import matplotlib.pyplot as plt
+from utils.nav import render_top_nav
 
 matplotlib.rcParams['font.family'] = 'DejaVu Sans'
 
@@ -221,19 +222,7 @@ def draw_confidence_bar(top5: list, highlight_label: str, bar_color: str) -> plt
 # ================================================================
 load_css(CSS_FILE)
 
-st.markdown("""
-<nav class="top-nav">
-  <span class="nav-brand">🧠 AI LAB</span>
-  <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
-  <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
-  <div class="nav-links">
-    <a href="javascript:void(0)" onclick="window.location.href='/'" class="nav-link">🏠 Home</a>
-    <a href="javascript:void(0)" onclick="window.location.href='/AI%E3%81%AE%E7%9B%AE'" class="nav-link">👁️ M01: AIの目</a>
-    <a href="javascript:void(0)" onclick="window.location.href='/AI%E9%A8%99%E3%81%97'" class="nav-link nav-active">🎭 M02: AI騙し</a>
-    <a href="javascript:void(0)" onclick="window.location.href='/AI%E8%82%B2%E6%88%90'" class="nav-link">🧬 M03: AI育成</a>
-  </div>
-</nav>
-""", unsafe_allow_html=True)
+render_top_nav("adversarial")
 
 st.markdown("""
 <div class="main-title-container">
@@ -274,10 +263,10 @@ with st.sidebar:
 
     st.divider()
     st.markdown("### 🧭 Navigation")
-    st.page_link("main_app.py",            label="司令室 (Home)",         icon="🏠")
-    st.page_link("pages/1_AIの目.py",      label="ミッション01: AIの目",  icon="👁️")
-    st.page_link("pages/2_AI騙し.py",     label="ミッション02: AI騙し",  icon="🎭")
-    st.page_link("pages/3_AI育成.py",     label="ミッション03: AI育成",  icon="🧬")
+    st.page_link("main_app.py",              label="司令室 (Home)",         icon="🏠")
+    st.page_link("pages/1_vision.py",        label="ミッション01: AIの目",  icon="👁️")
+    st.page_link("pages/2_adversarial.py",   label="ミッション02: AI騙し",  icon="🎭")
+    st.page_link("pages/3_training.py",      label="ミッション03: AI育成",  icon="🧬")
     st.divider()
     st.success("🛡️ SHIELD: ONLINE")
 
