@@ -597,34 +597,35 @@ with tab3:
 
     st.subheader("⚙️ アーキテクチャを設計しよう")
 
-    arch_c1, arch_c2, arch_c3 = st.columns(3)
-    with arch_c1:
+    ctrl_col, graph_col = st.columns([2, 3])
+
+    with ctrl_col:
         n_input   = st.slider("入力ノード数",     1, 8, 2, key="arch_in")
-    with arch_c2:
         n_hidden1 = st.slider("隠れ層1 ノード数", 1, 8, 4, key="arch_h1")
         n_hidden2 = st.slider("隠れ層2 ノード数", 0, 8, 3, key="arch_h2")
-    with arch_c3:
         n_output  = st.slider("出力ノード数",     1, 4, 1, key="arch_out")
 
-    layer_sizes = [n_input, n_hidden1]
-    if n_hidden2 > 0:
-        layer_sizes.append(n_hidden2)
-    layer_sizes.append(n_output)
+        layer_sizes = [n_input, n_hidden1]
+        if n_hidden2 > 0:
+            layer_sizes.append(n_hidden2)
+        layer_sizes.append(n_output)
 
-    total_params = sum(
-        layer_sizes[i] * layer_sizes[i + 1] + layer_sizes[i + 1]
-        for i in range(len(layer_sizes) - 1)
-    )
+        total_params = sum(
+            layer_sizes[i] * layer_sizes[i + 1] + layer_sizes[i + 1]
+            for i in range(len(layer_sizes) - 1)
+        )
 
-    fig_nn = plot_nn_diagram(layer_sizes)
-    st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
-    st.pyplot(fig_nn)
-    plt.close(fig_nn)
+        st.divider()
+        m1, m2 = st.columns(2)
+        m1.metric("総レイヤー数", f"{len(layer_sizes)}")
+        m2.metric("総ノード数",   f"{sum(layer_sizes)}")
+        st.metric("学習可能パラメータ数", f"{total_params:,}")
 
-    stat_c1, stat_c2, stat_c3 = st.columns(3)
-    stat_c1.metric("総レイヤー数",        f"{len(layer_sizes)}")
-    stat_c2.metric("総ノード数",          f"{sum(layer_sizes)}")
-    stat_c3.metric("学習可能パラメータ数", f"{total_params:,}")
+    with graph_col:
+        fig_nn = plot_nn_diagram(layer_sizes)
+        st.markdown('<span class="sim-chart-marker"></span>', unsafe_allow_html=True)
+        st.pyplot(fig_nn)
+        plt.close(fig_nn)
 
     st.subheader("📊 有名なネットワークとの比較")
     cmp_cols = st.columns(4)
