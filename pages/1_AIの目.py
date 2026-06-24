@@ -113,10 +113,10 @@ st.markdown("""
   <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
   <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
   <div class="nav-links">
-    <a href="/" class="nav-link">🏠 Home</a>
-    <a href="/AIの目" class="nav-link nav-active">👁️ M01: AIの目</a>
-    <a href="/AI騙し" class="nav-link">🎭 M02: AI騙し</a>
-    <a href="/AI育成" class="nav-link">🧬 M03: AI育成</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/'" class="nav-link">🏠 Home</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/AI%E3%81%AE%E7%9B%AE'" class="nav-link nav-active">👁️ M01: AIの目</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/AI%E9%A8%99%E3%81%97'" class="nav-link">🎭 M02: AI騙し</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/AI%E8%82%B2%E6%88%90'" class="nav-link">🧬 M03: AI育成</a>
   </div>
 </nav>
 """, unsafe_allow_html=True)

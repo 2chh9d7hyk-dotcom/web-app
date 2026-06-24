@@ -258,10 +258,10 @@ st.markdown("""
   <input type="checkbox" id="nav-toggle" class="nav-toggle-input">
   <label for="nav-toggle" class="hamburger-btn">☰ Menu</label>
   <div class="nav-links">
-    <a href="/" class="nav-link">🏠 Home</a>
-    <a href="/AIの目" class="nav-link">👁️ M01: AIの目</a>
-    <a href="/AI騙し" class="nav-link">🎭 M02: AI騙し</a>
-    <a href="/AI育成" class="nav-link nav-active">🧬 M03: AI育成</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/'" class="nav-link">🏠 Home</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/AI%E3%81%AE%E7%9B%AE'" class="nav-link">👁️ M01: AIの目</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/AI%E9%A8%99%E3%81%97'" class="nav-link">🎭 M02: AI騙し</a>
+    <a href="javascript:void(0)" onclick="window.location.href='/AI%E8%82%B2%E6%88%90'" class="nav-link nav-active">🧬 M03: AI育成</a>
   </div>
 </nav>
 """, unsafe_allow_html=True)
@@ -291,7 +291,7 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
     st.markdown("### ⚡ 学習パラメータ")
-    lr_sidebar     = st.slider("学習率 (η)", 0.001, 1.0, 0.1, 0.005, format="%.3f", key="lr_sidebar")
+    lr_sidebar     = st.slider("学習率 (η)", 0.001, 1.0, 0.9, 0.005, format="%.3f", key="lr_sidebar")
     epochs_sidebar = st.slider("エポック数",  10,   500, 100, 10,               key="ep_sidebar")
 
     st.divider()
@@ -399,7 +399,7 @@ with tab1:
         st.markdown("**⚖️ 重み・バイアス**")
         w1   = st.slider("重み w₁",    -3.0, 3.0,  0.8,  0.1, key="n_w1")
         w2   = st.slider("重み w₂",    -3.0, 3.0,  0.6,  0.1, key="n_w2")
-        bias = st.slider("バイアス b", -3.0, 3.0, -0.5,  0.1, key="n_bias")
+        bias = st.slider("バイアス b", -3.0, 3.0, -2.0,  0.1, key="n_bias")
         act_choice = st.selectbox("活性化関数", list(ACTIVATION_FUNS.keys()), key="n_act")
         act_fn     = ACTIVATION_FUNS[act_choice]
 
@@ -483,7 +483,7 @@ with tab2:
         n_samples    = st.slider("サンプル数", 40, 200, 100, 20, key="n_samples_3")
 
     with cfg_c2:
-        lr_t2     = st.slider("学習率 η",  0.001, 1.0, 0.1, 0.005, format="%.3f", key="lr_tab2")
+        lr_t2     = st.slider("学習率 η",  0.001, 1.0, 0.9, 0.005, format="%.3f", key="lr_tab2")
         epochs_t2 = st.slider("エポック数", 10,   500, 100, 10,               key="ep_tab2")
 
     with cfg_c3:
@@ -744,7 +744,7 @@ with tab4:
 
         ov_c1, ov_c2 = st.columns(2)
         with ov_c1:
-            poly_degree = st.slider("モデルの複雑さ（多項式の次数）", 1, 12, 3, key="poly_deg")
+            poly_degree = st.slider("モデルの複雑さ（多項式の次数）", 1, 12, 10, key="poly_deg")
             noise_level = st.slider("データのノイズ量",              0.05, 1.0, 0.3, 0.05, key="noise_lv")
         with ov_c2:
             st.markdown("""
