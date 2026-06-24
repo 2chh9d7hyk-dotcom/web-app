@@ -216,12 +216,13 @@ def plot_overfitting(degree, noise, seed=7):
     return fig, train_mse, test_mse
 
 def plot_nn_diagram(layer_sizes):
-    fig, ax = plt.subplots(figsize=(8, 4.5))
+    fig, ax = plt.subplots(figsize=(8, 6))
     fig.patch.set_facecolor("#1e2a3a")
     ax.set_facecolor("#1e2a3a")
     ax.axis("off")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
+    ax.set_aspect('equal', adjustable='datalim')
     n_layers    = len(layer_sizes)
     xs          = np.linspace(0.1, 0.9, n_layers)
     layer_cols  = ["#00d4ff", "#05ffa1", "#ffd700", "#ff71ce", "#00d4ff"]

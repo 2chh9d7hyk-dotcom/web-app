@@ -869,53 +869,35 @@ div[data-testid="stVerticalBlock"]:has(> .element-container .stMarkdown .lab-anc
   height: auto !important;
 }
 
-/* コンテンツ写真（サンプル画像など）: 小さめ・比率保持・中央寄せ
-   コンテナを fit-content にして強制的な幅伸縮を防ぐ */
+/* ─── すべての stImage（デフォルト）──────────────────────────
+   カラム幅いっぱい・height: auto で比率を保持する。
+   写真・フィルタ比較・ギャラリー・グラフ、すべてに適用。
+   max-height は設定しない → 縦方向に比率を崩さない。       */
 div[data-testid="stImage"] {
   display: block !important;
-  width: fit-content !important;
+  width: 100% !important;
   max-width: 100% !important;
-  margin: 0 auto !important;
+  margin: 0 !important;
 }
 div[data-testid="stImage"] img {
-  max-height: 200px !important;
-  max-width: 100% !important;
-  width: auto !important;
+  width: 100% !important;
   height: auto !important;
+  max-width: 100% !important;
 }
 
-/* シミュレーション/matplotlib グラフ: 幅いっぱいに表示・大きめ
-   Streamlit は各要素を .element-container でラップするため、
-   .sim-chart-marker → 次の .element-container 内の stImage を対象 */
-.element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"],
-[data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"],
-[data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"],
-div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] {
+/* ─── シミュレーション/matplotlibグラフ ─────────────────────
+   .sim-chart-marker 直後の stImage を明示的に上書き保証。
+   デフォルトと同じだが将来の変更に備えて残す。            */
+.element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"] {
   width: 100% !important;
 }
-.element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"] img,
-[data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
-[data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"] img,
-div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] img {
-  max-height: 430px !important;
-  max-width: 100% !important;
-  width: auto !important;
+.element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"] img {
+  width: 100% !important;
   height: auto !important;
+  max-width: 100% !important;
 }
 
 img { max-width: 100%; height: auto; }
-
-@media (max-width: 768px) {
-  div[data-testid="stImage"] img {
-    max-height: 160px !important;
-  }
-  .element-container:has(.sim-chart-marker) + .element-container [data-testid="stImage"] img,
-  [data-testid="stMarkdown"]:has(.sim-chart-marker) + [data-testid="stImage"] img,
-  [data-testid="stMarkdown"]:has(.sim-chart-marker) + div [data-testid="stImage"] img,
-  div:has(> [data-testid="stMarkdownContainer"] .sim-chart-marker) + div [data-testid="stImage"] img {
-    max-height: 280px !important;
-  }
-}
 
 /* ============================================================
    17. HIGHLIGHT — テキストハイライト
